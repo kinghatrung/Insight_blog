@@ -7,6 +7,7 @@ import { connect } from "./config/db.js";
 import authMiddleware from "./middlewares/authMiddleware.js";
 import authRouter from "./routes/authRouter.js";
 import userRouter from "./routes/userRouter.js";
+import blogRouter from "./routes/blogRouter.js";
 
 dotenv.config();
 
@@ -24,6 +25,7 @@ app.use(
 
 // Routes
 app.use("/api/auth", authRouter);
+app.use("/api/blogs", blogRouter);
 
 app.use(authMiddleware.isAuthorized);
 app.use("/api/users", userRouter);
