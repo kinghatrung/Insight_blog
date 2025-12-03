@@ -1,7 +1,6 @@
 import type { ReactNode } from 'react'
 import { PageContainer, ProCard, ProLayout } from '@ant-design/pro-components'
 import {
-  GithubFilled,
   InfoCircleFilled,
   LogoutOutlined,
   QuestionCircleFilled,
@@ -111,7 +110,7 @@ function ProtectedLayout({ children }: DefaultLayoutProps) {
         )}
         avatarProps={{
           src: 'https://gw.alipayobjects.com/zos/antfincdn/efFD%24IOql2/weixintupian_20170331104822.jpg',
-          size: 'default',
+          size: 'small',
           title: currentUser?.displayName,
           render: (props, dom) => {
             return (
@@ -152,8 +151,7 @@ function ProtectedLayout({ children }: DefaultLayoutProps) {
           return [
             props.layout !== 'side' && document.body.clientWidth > 1400 ? <SearchInput /> : undefined,
             <InfoCircleFilled key='InfoCircleFilled' />,
-            <QuestionCircleFilled key='QuestionCircleFilled' />,
-            <GithubFilled key='GithubFilled' />
+            <QuestionCircleFilled key='QuestionCircleFilled' />
           ]
         }}
         {...defaultProps}

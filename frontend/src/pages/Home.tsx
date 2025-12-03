@@ -1,4 +1,4 @@
-import UserMange from './UserMange'
+import UserMange from '~/pages/UserMange'
 
 function Home() {
   return (

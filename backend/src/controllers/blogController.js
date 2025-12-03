@@ -3,9 +3,12 @@ import blogService from "../services/blogService.js";
 const blogController = {
   getBlogs: async (req, res) => {
     try {
-      const blogs = await blogService.getBlogs();
+      const page = parseInt(req.query.page) || 1;
+      const pageSize = parseInt(req.query.pageSize) || 5;
 
-      res.status(200).json({ blogs });
+      const blogs = await blogService.getBlogs(page, pageSize);
+
+      res.status(200).json(blogs);
     } catch (error) {
       res.status(500).json({ message: error.message });
     }

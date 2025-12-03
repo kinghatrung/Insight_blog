@@ -2,10 +2,21 @@ import Blog from "../models/Blog.js";
 import { slugify } from "../utils/slugify.js";
 
 const blogService = {
-  getBlogs: async () => {
+  getBlogs: async (page = 1, pageSize = 5) => {
     try {
-      const blogs = await Blog.find().populate("author", "username displayName").lean();
-      return blogs;
+      const skip = (page - 1) * pageSize;
+      const total = await Blog.countDocuments();
+      const blogs = await Blog.find()
+        .populate("author", "username displayName")
+        .sort({ createdAt: -1 })
+        .skip(skip)
+        .limit(pageSize)
+        .lean();
+
+      return {
+        data: blogs,
+        total,
+      };
     } catch (error) {
       throw error;
     }

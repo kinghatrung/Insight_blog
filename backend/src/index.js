@@ -8,6 +8,7 @@ import authMiddleware from "./middlewares/authMiddleware.js";
 import authRouter from "./routes/authRouter.js";
 import userRouter from "./routes/userRouter.js";
 import blogRouter from "./routes/blogRouter.js";
+import uploadRouter from "./routes/uploadRouter.js";
 
 dotenv.config();
 
@@ -29,6 +30,7 @@ app.use("/api/blogs", blogRouter);
 
 app.use(authMiddleware.isAuthorized);
 app.use("/api/users", userRouter);
+app.use("/api/upload", uploadRouter);
 
 connect().then(() => {
   app.listen(PORT, () => {
