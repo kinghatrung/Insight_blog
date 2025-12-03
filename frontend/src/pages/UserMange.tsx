@@ -1,7 +1,7 @@
-import { EllipsisOutlined, PlusOutlined } from '@ant-design/icons'
+import { PlusOutlined } from '@ant-design/icons'
 import type { ActionType, ProColumns } from '@ant-design/pro-components'
 import { ProTable, TableDropdown } from '@ant-design/pro-components'
-import { Button, Dropdown, Space, Tag } from 'antd'
+import { Button, Space, Tag } from 'antd'
 import { useRef } from 'react'
 // import request from 'umi-request'
 // export const waitTimePromise = async (time: number = 100) => {
@@ -68,18 +68,17 @@ const columns: ProColumns<GithubIssueItem>[] = [
       placeholder: 'Trạng thái Blog cần tìm'
     },
     valueEnum: {
-      all: { text: '超长'.repeat(50) },
+      all: { text: 'Tất cả' },
       open: {
-        text: '未解决',
+        text: 'Lỗi',
         status: 'Error'
       },
       closed: {
-        text: '已解决',
-        status: 'Success',
-        disabled: true
+        text: 'Đang hoạt động',
+        status: 'Success'
       },
       processing: {
-        text: '解决中',
+        text: 'Đang xử lý',
         status: 'Processing'
       }
     }
@@ -107,7 +106,9 @@ const columns: ProColumns<GithubIssueItem>[] = [
     key: 'showTime',
     dataIndex: 'created_at',
     valueType: 'date',
-    sorter: true,
+    fieldProps: {
+      format: 'DD/MM/YYYY'
+    },
     hideInSearch: true
   },
   {
@@ -116,7 +117,8 @@ const columns: ProColumns<GithubIssueItem>[] = [
     valueType: 'dateRange',
     hideInTable: true,
     fieldProps: {
-      placeholder: ['Ngày bắt đầu', 'Ngày kết thúc']
+      placeholder: ['Ngày bắt đầu', 'Ngày kết thúc'],
+      format: 'DD/MM/YYYY'
     },
     search: {
       transform: (value) => {
@@ -156,12 +158,13 @@ const columns: ProColumns<GithubIssueItem>[] = [
 ]
 
 function UserMange() {
-  const actionRef = useRef<ActionType>()
+  const actionRef = useRef<ActionType | null>(null)
 
   return (
     <ProTable<GithubIssueItem>
       columns={columns}
       actionRef={actionRef}
+      dateFormatter='string'
       cardBordered
       // request={async (params, sort, filter) => {
       //   console.log(sort, filter)
@@ -209,7 +212,6 @@ function UserMange() {
         pageSize: 5,
         onChange: (page) => console.log(page)
       }}
-      dateFormatter='string'
       headerTitle='Quản lý Người dùng'
       toolBarRender={() => [
         <Button
@@ -221,30 +223,7 @@ function UserMange() {
           type='primary'
         >
           Thêm mới
-        </Button>,
-        <Dropdown
-          key='menu'
-          menu={{
-            items: [
-              {
-                label: '1st item',
-                key: '1'
-              },
-              {
-                label: '2nd item',
-                key: '2'
-              },
-              {
-                label: '3rd item',
-                key: '3'
-              }
-            ]
-          }}
-        >
-          <Button>
-            <EllipsisOutlined />
-          </Button>
-        </Dropdown>
+        </Button>
       ]}
     />
   )

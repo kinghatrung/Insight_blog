@@ -13,7 +13,7 @@ export default {
         component: <Dashboard />
       },
       {
-        path: '/dashboard/blogs',
+        path: '/blogs',
         name: 'Bài viết',
         icon: <CrownFilled />,
         component: <Home />

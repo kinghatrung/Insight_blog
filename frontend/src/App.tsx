@@ -29,8 +29,8 @@ function App() {
           <Route>
             <Route element={<ProtectedRoute />}>
               <Route element={<Wrapper layout={ProtectedLayout} />}>
-                <Route path='/dashboard' element={<Home />} />
-                <Route path='/dashboard/blogs' element={<Dashboard />} />
+                <Route path='/dashboard' element={<Dashboard />} />
+                <Route path='/blogs' element={<Home />} />
               </Route>
             </Route>
             <Route path='/auth' element={<Auth />} />

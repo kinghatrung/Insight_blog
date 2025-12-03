@@ -3,6 +3,9 @@ import { createRoot } from 'react-dom/client'
 import { Provider } from 'react-redux'
 import { PersistGate } from 'redux-persist/integration/react'
 import { persistStore } from 'redux-persist'
+import viVN from 'antd/locale/vi_VN'
+import dayjs from 'dayjs'
+import 'dayjs/locale/vi'
 
 import './index.css'
 import App from './App.tsx'
@@ -14,6 +17,7 @@ import { injectStore } from '~/utils/authorizedAxios'
 injectStore(store)
 
 const persistor = persistStore(store)
+dayjs.locale('vi')
 
 const config: ThemeConfig = {
   token: {
@@ -27,7 +31,7 @@ const config: ThemeConfig = {
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <ConfigProvider theme={config}>
+    <ConfigProvider theme={config} locale={viVN}>
       <Provider store={store}>
         <PersistGate persistor={persistor}>
           <App />
