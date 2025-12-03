@@ -1,30 +1,25 @@
-import {
-  LockOutlined,
-  UserOutlined,
-  MailOutlined,
-  IdcardOutlined,
-  FormOutlined
-} from '@ant-design/icons'
-import { FaFacebookF, FaGoogle } from 'react-icons/fa'
-import {
-  LoginFormPage,
-  ProConfigProvider,
-  ProFormCheckbox,
-  ProFormText
-} from '@ant-design/pro-components'
-import { Divider, Space, Tabs, theme } from 'antd'
-import type { CSSProperties } from 'react'
 import { useState } from 'react'
+import { LockOutlined, UserOutlined, MailOutlined, IdcardOutlined, FormOutlined } from '@ant-design/icons'
+import { FaFacebookF, FaGoogle } from 'react-icons/fa'
+import { LoginFormPage, ProConfigProvider, ProFormCheckbox, ProFormText } from '@ant-design/pro-components'
+import { Divider, Space, Tabs, theme } from 'antd'
+import { useDispatch, useSelector } from 'react-redux'
+import { useNavigate, Navigate } from 'react-router-dom'
+import type { CSSProperties } from 'react'
+import type { AppDispatch } from '~/redux/store'
+
+import { loginUser } from '~/redux/slices/authSlice'
+import { authService } from '~/services/authService'
+import { authSelectors } from '~/redux/slices/authSlice'
 
 type LoginType = 'Đăng ký' | 'Đăng nhập'
 
 interface FormData {
-  username?: string
-  password?: string
-  autoLogin?: boolean
-  lastName?: string
-  firstName?: string
-  email?: string
+  username: string
+  password: string
+  lastName: string
+  firstName: string
+  email: string
 }
 
 const iconStyles: CSSProperties = {
@@ -37,9 +32,20 @@ const iconStyles: CSSProperties = {
 const Page = () => {
   const [loginType, setLoginType] = useState<LoginType>('Đăng nhập')
   const { token } = theme.useToken()
+  const dispatch = useDispatch<AppDispatch>()
+  const navigate = useNavigate()
 
-  const handleAuth = (data: FormData) => {
-    console.log('Login data:', data)
+  const handleAuth = async (data: FormData) => {
+    const { email, firstName, lastName, password, username } = data
+
+    if (loginType === 'Đăng ký') {
+      await authService.register(email, username, password, lastName, firstName)
+      setLoginType('Đăng nhập')
+    }
+    if (loginType === 'Đăng nhập') {
+      dispatch(loginUser({ username, password }))
+      navigate('/')
+    }
   }
 
   return (
@@ -118,11 +124,7 @@ const Page = () => {
           </div>
         }
       >
-        <Tabs
-          centered
-          activeKey={loginType}
-          onChange={(activeKey) => setLoginType(activeKey as LoginType)}
-        >
+        <Tabs centered activeKey={loginType} onChange={(activeKey) => setLoginType(activeKey as LoginType)}>
           <Tabs.TabPane key={'Đăng nhập'} tab={'Đăng nhập'} />
           <Tabs.TabPane key={'Đăng ký'} tab={'Đăng ký'} />
         </Tabs>
@@ -327,6 +329,9 @@ const Page = () => {
 }
 
 export default function Auth() {
+  const { currentUser } = useSelector(authSelectors)
+
+  if (currentUser) return <Navigate to='/' replace />
   return (
     <ProConfigProvider dark>
       <Page />

@@ -3,7 +3,10 @@ import { Fragment } from 'react'
 
 import Home from '~/pages/Home'
 import Auth from '~/pages/Auth'
-import DefaultLayout from '~/layouts/DefaultLayout'
+import Dashboard from '~/pages/Dashboard'
+import ProtectedRoute from '~/components/ProtectedRoute'
+// import DefaultLayout from '~/layouts/DefaultLayout'
+import ProtectedLayout from '~/layouts/ProtectedLayout'
 
 interface WrapperProps {
   layout?: React.ComponentType<{ children?: React.ReactNode }>
@@ -23,10 +26,15 @@ function App() {
     <BrowserRouter basename='/'>
       <div className='App'>
         <Routes>
-          <Route element={<Wrapper layout={DefaultLayout} />}>
-            <Route path='/' element={<Home />} />
+          <Route>
+            <Route element={<ProtectedRoute />}>
+              <Route element={<Wrapper layout={ProtectedLayout} />}>
+                <Route path='/dashboard' element={<Home />} />
+                <Route path='/dashboard/blogs' element={<Dashboard />} />
+              </Route>
+            </Route>
+            <Route path='/auth' element={<Auth />} />
           </Route>
-          <Route path='/auth' element={<Auth />} />
           <Route path='/not-found' element={<Auth />} />
         </Routes>
       </div>

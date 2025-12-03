@@ -1,5 +1,11 @@
+import UserMange from './UserMange'
+
 function Home() {
-  return <>Home</>
+  return (
+    <div>
+      <UserMange />
+    </div>
+  )
 }
 
 export default Home
