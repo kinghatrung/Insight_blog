@@ -26,9 +26,17 @@ const uploadService = {
         });
 
       const result = await streamUpload(file.buffer);
-      return result.secure_url;
+      return { url: result.secure_url, public_id: result.public_id };
     } catch (error) {
       console.error("LỖI CLOUDINARY:", error);
+      throw error;
+    }
+  },
+  deleteImage: async (publicId) => {
+    try {
+      const result = await cloudinary.uploader.destroy(publicId);
+      return result;
+    } catch (error) {
       throw error;
     }
   },

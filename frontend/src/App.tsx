@@ -1,11 +1,16 @@
-import { BrowserRouter, Route, Routes, Outlet } from 'react-router'
 import { Fragment } from 'react'
+import { BrowserRouter, Route, Routes, Outlet } from 'react-router'
 
 import Home from '~/pages/Home'
 import Auth from '~/pages/Auth'
 import Dashboard from '~/pages/Dashboard'
+import DetailBlog from '~/pages/DetailBlog'
+import Category from '~/pages/Category'
+
 import ProtectedRoute from '~/components/ProtectedRoute'
-// import DefaultLayout from '~/layouts/DefaultLayout'
+import ScrollTop from '~/components/ScrollTop'
+
+import DefaultLayout from '~/layouts/DefaultLayout'
 import ProtectedLayout from '~/layouts/ProtectedLayout'
 
 interface WrapperProps {
@@ -24,20 +29,22 @@ const Wrapper: React.FC<WrapperProps> = ({ layout }) => {
 function App() {
   return (
     <BrowserRouter basename='/'>
-      <div className='App'>
-        <Routes>
-          <Route>
-            <Route element={<ProtectedRoute />}>
-              <Route element={<Wrapper layout={ProtectedLayout} />}>
-                <Route path='/dashboard' element={<Dashboard />} />
-                <Route path='/blogs' element={<Home />} />
-              </Route>
-            </Route>
-            <Route path='/auth' element={<Auth />} />
+      <ScrollTop />
+      <Routes>
+        <Route element={<Wrapper layout={DefaultLayout} />}>
+          <Route path='/' element={<Home />} />
+          <Route path='/category' element={<Category />} />
+          <Route path='/detail/:slug' element={<DetailBlog />} />
+        </Route>
+        <Route element={<ProtectedRoute />}>
+          <Route element={<Wrapper layout={ProtectedLayout} />}>
+            <Route path='/dashboard' element={<Dashboard />} />
+            <Route path='/blogs' element={<Home />} />
           </Route>
-          <Route path='/not-found' element={<Auth />} />
-        </Routes>
-      </div>
+        </Route>
+        <Route path='/auth' element={<Auth />} />
+        <Route path='/not-found' element={<Auth />} />
+      </Routes>
     </BrowserRouter>
   )
 }

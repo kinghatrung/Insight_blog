@@ -3,3 +3,45 @@
   padding: 0;
   box-sizing: border-box;
 }
+
+.nav-link {
+  color: #f8fafc;
+  transition: color 0.25s ease;
+}
+
+.nav-link:hover {
+  color: hsl(210 40% 98% / 0.7) !important;
+}
+
+.nav-header {
+  display: inline-block;
+  padding: 8px 10px;
+  border-radius: 8px;
+  transition:
+    background-color 0.3s,
+    color 0.3s;
+  text-decoration: none;
+}
+
+.nav-header:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+  color: #f8fafc;
+}
+
+.zoom-on-hover {
+  transition: transform 0.3s ease;
+  cursor: pointer;
+}
+
+.zoom-on-hover:hover {
+  transform: scale(1.04);
+}
+
+/*  Component Ant Design  */
+.ant-card {
+  padding: 0 !important;
+}
+
+.ant-card-body {
+  padding: 16px !important;
+}

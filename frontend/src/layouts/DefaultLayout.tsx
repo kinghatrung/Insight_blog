@@ -1,5 +1,8 @@
-import { Layout } from 'antd'
 import type { ReactNode } from 'react'
+import { Layout } from 'antd'
+
+import FooterBlog from '~/components/FooterBlog'
+import HeaderBlog from '~/components/HeaderBlog'
 
 const { Content } = Layout
 
@@ -9,16 +12,32 @@ interface DefaultLayoutProps {
 
 function DefaultLayout({ children }: DefaultLayoutProps) {
   return (
-    <Layout style={{ minHeight: '100vh' }}>
+    <Layout
+      style={{
+        minHeight: '100vh',
+        background: 'hsl(222.2 84% 4.9%)'
+      }}
+    >
+      <HeaderBlog />
       <Content
         style={{
-          maxWidth: '1130px',
-          paddingInline: '16px',
-          marginInline: 'auto'
+          padding: '112px 24px',
+          backgroundImage: 'url("/images/noise.webp")',
+          backgroundSize: '200px 200px',
+          backgroundPosition: '0 0'
         }}
       >
-        {children}
+        <section
+          style={{
+            width: '100%',
+            marginInline: 'auto',
+            maxWidth: '1280px'
+          }}
+        >
+          {children}
+        </section>
       </Content>
+      <FooterBlog />
     </Layout>
   )
 }

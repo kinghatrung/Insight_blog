@@ -5,6 +5,7 @@ import { ProTable, ProForm, ProFormText, ProFormSelect, ProFormUploadDragger } f
 import { Button, Modal } from 'antd'
 import type { ActionType, ProColumns } from '@ant-design/pro-components'
 import type { UploadRequestOption } from 'rc-upload/lib/interface'
+import type { UploadFile } from 'antd'
 
 import { authSelectors } from '~/redux/slices/authSlice'
 import QuillEditor from '~/components/QuillEditor'
@@ -14,6 +15,10 @@ import type { Blog, BlogFromValues } from '~/types/Blog'
 import type { User } from '~/types/User'
 
 const { confirm } = Modal
+
+interface MyUploadFile extends UploadFile {
+  public_id?: string
+}
 
 function UserMange() {
   const actionRef = useRef<ActionType | null>(null)
@@ -34,7 +39,7 @@ function UserMange() {
   }
 
   const handleCreateBlog = async (values: BlogFromValues) => {
-    const { title, status, content, thumbnail } = values
+    const { title, status, content, thumbnail, description } = values
     const userId = (currentUser as User)._id
     let finalThumbnailUrl: string | undefined = undefined
     if (Array.isArray(thumbnail)) {
@@ -51,7 +56,7 @@ function UserMange() {
       return
     }
 
-    await blogService.createBlog(title, content, finalThumbnailUrl, status, userId)
+    await blogService.createBlog(title, content, finalThumbnailUrl, status, userId, description)
     setIsModalOpen(false)
     actionRef.current?.reload()
   }
@@ -59,17 +64,21 @@ function UserMange() {
   const handleUploadImage = async (options: UploadRequestOption) => {
     const { file, onSuccess, onError } = options
     const fileToUpload = file as File
+
     try {
       const uploadedFile = await uploadService.upload(fileToUpload)
       const imageUrl = uploadedFile.data
-      if (onSuccess) {
-        onSuccess(imageUrl)
-      }
+      onSuccess?.(imageUrl)
     } catch (error) {
-      if (onError) {
-        onError(error as Error)
-      }
+      onError?.(error as Error)
     }
+  }
+
+  const deleteImageOnCloudinary = async (file: MyUploadFile) => {
+    const publicId = file.response?.public_id || file.response || file?.public_id
+    console.log(file)
+    if (!publicId) return
+    await uploadService.deleteImage(publicId)
   }
 
   const columns: ProColumns<Blog>[] = [
@@ -80,9 +89,12 @@ function UserMange() {
     },
     {
       title: 'Ảnh',
+      editable: false,
       dataIndex: 'thumbnail',
       search: false,
-      render: (_, record) => <img src={record.thumbnail} alt={record.title} style={{ width: 60 }} />
+      render: (_, record) => (
+        <img src={record.thumbnail} alt={record.title} style={{ width: 60, height: 60, objectFit: 'cover' }} />
+      )
     },
     {
       title: 'Tiêu đề',
@@ -92,6 +104,15 @@ function UserMange() {
       fieldProps: { placeholder: 'Tiêu đề Blog cần tìm' },
       tooltip: 'Tiêu đề Blog',
       formItemProps: { rules: [{ required: true, message: 'Vui lòng nhập tiêu đề' }] }
+    },
+    {
+      title: 'Mô tả',
+      dataIndex: 'description',
+      copyable: true,
+      ellipsis: true,
+      fieldProps: { placeholder: 'Mô tả Blog cần tìm' },
+      tooltip: 'Mô trả của Blog',
+      formItemProps: { rules: [{ required: true, message: 'Vui lòng nhập mô tả' }] }
     },
     {
       disable: true,
@@ -112,16 +133,18 @@ function UserMange() {
     },
     {
       title: 'Tác giả',
-      dataIndex: ['author', 'displayName'],
+      editable: false,
+      dataIndex: ['displayName'],
       render: (_, record) => record.author?.displayName || 'Không xác định'
     },
     {
       title: 'Ngày tạo',
       key: 'showTime',
+      editable: false,
       dataIndex: 'createdAt',
       valueType: 'date',
       fieldProps: {
-        format: 'DD/MM/YYYY HH:mm:ss'
+        format: 'DD/MM/YYYY HH:mm'
       },
       hideInSearch: true
     },
@@ -136,6 +159,9 @@ function UserMange() {
       },
       search: {
         transform: (value) => {
+          if (!value || !Array.isArray(value)) {
+            return {}
+          }
           return {
             startTime: value[0],
             endTime: value[1]
@@ -169,9 +195,13 @@ function UserMange() {
         cardBordered
         rowKey='_id'
         request={async (params) => {
-          const { current = 1, pageSize = 5 } = params
+          const { current, pageSize, ...rest } = params
           try {
-            const res = await blogService.getBlogs(current, pageSize)
+            const res = await blogService.getBlogs({
+              page: current!,
+              pageSize: pageSize!,
+              ...rest
+            })
             return {
               data: res.data,
               total: res.total,
@@ -185,8 +215,26 @@ function UserMange() {
         editable={{
           type: 'multiple',
           onSave: async (_, record) => {
-            await blogService.editBlog(record._id, record.title, record.content, record.thumbnail, record.status)
+            await blogService.editBlog(
+              record._id,
+              record.title,
+              record.content,
+              record.thumbnail,
+              record.status,
+              record.description
+            )
             actionRef.current?.reload()
+          }
+        }}
+        form={{
+          syncToUrl: (values, type) => {
+            if (type === 'get') {
+              return {
+                ...values,
+                created_at: [values.startTime, values.endTime]
+              }
+            }
+            return values
           }
         }}
         headerTitle='Quản lý Blog'
@@ -196,9 +244,6 @@ function UserMange() {
           defaultValue: {
             option: { fixed: 'right', disable: true }
           }
-          // onChange(value) {
-          //   console.log('value: ', value)
-          // }
         }}
         search={{ labelWidth: 'auto' }}
         options={{ setting: { listsHeight: 400 } }}
@@ -215,7 +260,7 @@ function UserMange() {
       <Modal title='Tạo mới Blog' open={isModalOpen} footer={null} onCancel={() => setIsModalOpen(false)} width={1200}>
         <ProForm
           initialValues={{ content: '' }}
-          onFinish={(values) => handleCreateBlog(values)}
+          onFinish={(values) => handleCreateBlog(values as BlogFromValues)}
           submitter={{
             searchConfig: {
               submitText: 'Tạo Blog',
@@ -233,6 +278,13 @@ function UserMange() {
                 placeholder='Nhập tiêu đề blog'
                 rules={[{ required: true, message: 'Vui lòng nhập tiêu đề' }]}
               />
+              <ProFormText
+                name='description'
+                label='Mô tả'
+                fieldProps={{ style: { height: 40 } }}
+                placeholder='Nhập mô tả của blog'
+                rules={[{ required: true, message: 'Vui lòng nhập mô tả' }]}
+              />
               <ProFormSelect
                 name='status'
                 label='Trạng thái'
@@ -248,19 +300,26 @@ function UserMange() {
                 max={1}
                 name='thumbnail'
                 fieldProps={{
-                  customRequest: handleUploadImage
+                  customRequest: handleUploadImage,
+                  onRemove: deleteImageOnCloudinary,
+                  listType: 'picture'
                 }}
                 label='Ảnh'
                 title='Hình ảnh Thumbnail của Blog'
                 getValueFromEvent={(e) => {
-                  if (Array.isArray(e)) return e
-                  const fileList = e?.fileList || []
+                  const fileList = Array.isArray(e) ? e : e?.fileList || []
                   const lastFile = fileList[fileList.length - 1]
-                  if (lastFile && lastFile.status === 'done' && lastFile.response) return lastFile.response
+                  if (lastFile && lastFile.status === 'done' && lastFile.response) {
+                    return lastFile.response
+                  }
                   return fileList
                 }}
                 normalize={(value) => {
-                  if (typeof value === 'string') return [{ uid: '1', name: 'Thumbnail', status: 'done', url: value }]
+                  if (typeof value === 'string') {
+                    return [{ uid: '1', name: 'Thumbnail', status: 'done', url: value }]
+                  } else if (value && typeof value === 'object' && value.url) {
+                    return [{ uid: '1', name: 'Thumbnail', status: 'done', ...value }]
+                  }
                   return value
                 }}
                 description='Chọn hoặc kéo thả file vào đây'

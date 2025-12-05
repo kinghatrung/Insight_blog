@@ -2,6 +2,7 @@ export interface Author {
   _id: string
   username: string
   displayName: string
+  avatarUrl: string
 }
 
 interface FileListItem {
@@ -12,6 +13,7 @@ interface FileListItem {
 export interface Blog {
   _id: string
   title: string
+  description: string
   content: string
   thumbnail: string
   slug: string
@@ -23,8 +25,17 @@ export interface Blog {
 
 export interface BlogFromValues {
   title: string
+  description: string
   content: string
   thumbnail: string | FileListItem[]
   status: string
-  
+}
+
+export interface GetBlogsParams {
+  page: number
+  pageSize: number
+  title?: string
+  status?: string
+  startTime?: string
+  endTime?: string
 }
