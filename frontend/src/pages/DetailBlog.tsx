@@ -26,7 +26,7 @@ function DetailBlog() {
   const newBlogs = blogsData?.filter((blog: Blog) => blog.slug !== slug).slice(0, 3)
 
   return (
-    <div>
+    <section>
       <Flex vertical style={{ marginBottom: 48 }}>
         <img
           style={{
@@ -131,7 +131,7 @@ function DetailBlog() {
           ))}
         </Row>
       </Row>
-    </div>
+    </section>
   )
 }
 

@@ -1,9 +1,10 @@
 import { Layout, Button, Typography, Dropdown, Flex } from 'antd'
 import { Link } from 'react-router-dom'
 import { SearchOutlined, LogoutOutlined, UserOutlined } from '@ant-design/icons'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
+import { useNavigate } from 'react-router-dom'
 
-import { logoutUser } from '~/redux/slices/authSlice'
+import { logoutUser, authSelectors } from '~/redux/slices/authSlice'
 import type { AppDispatch } from '~/redux/store'
 
 const { Title } = Typography
@@ -11,9 +12,13 @@ const { Header } = Layout
 
 function HeaderBlog() {
   const dispatch = useDispatch<AppDispatch>()
+  const navigate = useNavigate()
+  const { currentUser } = useSelector(authSelectors)
+  const roleUser = currentUser?.role
 
   const handleLogout = async () => {
     dispatch(logoutUser())
+    navigate('/auth')
   }
 
   return (
@@ -88,27 +93,88 @@ function HeaderBlog() {
           icon={<SearchOutlined />}
         />
         <Dropdown
-          // menu={{
-          //   items: [{ onClick: handleLogout, key: 'logout', icon: <LogoutOutlined />, label: 'Đăng xuất' }]
-          // }}
           placement='bottomRight'
           dropdownRender={() => (
             <div
               style={{
-                backgroundColor: 'hsl(222.2 84% 4.9%) !important',
-                borderColor: 'hsl(217.2 32.6% 17.5%)',
-                maxWidth: 190
+                backgroundColor: 'hsl(222.2 84% 4.9%)',
+                border: '1px solid hsl(217.2 32.6% 17.5%)',
+                borderRadius: 8,
+                width: 200
               }}
             >
-              <button
-                style={{
-                  display: 'block',
-                  color: '#f8fafc',
-                  borderRadius: 6
-                }}
-              >
-                Đăng xuất
-              </button>
+              {roleUser === 'admin' && (
+                <Link
+                  to='/dashboard'
+                  className='nav-user'
+                  style={{
+                    display: 'block',
+                    width: '100%',
+                    fontWeight: 500,
+                    padding: '12px 16px',
+                    color: '#f8fafc',
+                    borderRadius: 6,
+                    backgroundColor: 'transparent',
+                    borderColor: 'hsl(217.2 32.6% 17.5%)'
+                  }}
+                >
+                  Quản lý
+                </Link>
+              )}
+              {!currentUser && (
+                <Link
+                  to='/auth'
+                  className='nav-user'
+                  style={{
+                    display: 'block',
+                    fontWeight: 500,
+                    width: '100%',
+                    padding: '12px 16px',
+                    color: '#f8fafc',
+                    borderRadius: 6,
+                    backgroundColor: 'transparent',
+                    borderColor: 'hsl(217.2 32.6% 17.5%)'
+                  }}
+                >
+                  Đăng nhập/Đăng ký
+                </Link>
+              )}
+              {currentUser && (
+                <>
+                  <Link
+                    to='/profile'
+                    className='nav-user'
+                    style={{
+                      display: 'block',
+                      fontWeight: 500,
+                      width: '100%',
+                      padding: '12px 16px',
+                      color: '#f8fafc',
+                      borderRadius: 6,
+                      backgroundColor: 'transparent',
+                      borderColor: 'hsl(217.2 32.6% 17.5%)'
+                    }}
+                  >
+                    Trang cá nhân
+                  </Link>
+                  <a
+                    className='nav-user'
+                    onClick={handleLogout}
+                    style={{
+                      display: 'block',
+                      width: '100%',
+                      fontWeight: 500,
+                      padding: '12px 16px',
+                      color: '#f8fafc',
+                      borderRadius: 6,
+                      backgroundColor: 'transparent',
+                      borderColor: 'hsl(217.2 32.6% 17.5%)'
+                    }}
+                  >
+                    <LogoutOutlined style={{ marginRight: 4, verticalAlign: 'center' }} /> Đăng xuất
+                  </a>
+                </>
+              )}
             </div>
           )}
         >

@@ -6,6 +6,7 @@ import Auth from '~/pages/Auth'
 import Dashboard from '~/pages/Dashboard'
 import DetailBlog from '~/pages/DetailBlog'
 import Category from '~/pages/Category'
+import About from '~/pages/About'
 
 import ProtectedRoute from '~/components/ProtectedRoute'
 import ScrollTop from '~/components/ScrollTop'
@@ -34,6 +35,7 @@ function App() {
         <Route element={<Wrapper layout={DefaultLayout} />}>
           <Route path='/' element={<Home />} />
           <Route path='/category' element={<Category />} />
+          <Route path='/aboutme' element={<About />} />
           <Route path='/detail/:slug' element={<DetailBlog />} />
         </Route>
         <Route element={<ProtectedRoute />}>

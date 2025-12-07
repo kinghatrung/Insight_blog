@@ -1,6 +1,8 @@
 import { Card, Avatar, Flex, Typography, Badge } from 'antd'
 import { UserOutlined } from '@ant-design/icons'
 import { Link } from 'react-router-dom'
+import dayjs from 'dayjs'
+
 import type { Blog } from '~/types/Blog'
 
 const { Title, Paragraph } = Typography
@@ -76,7 +78,9 @@ function CardBlog({ blog, direction = 'vertical' }: CardBlogProps) {
           icon={<UserOutlined />}
           src={blog?.author.avatarUrl || 'https://gw.alipayobjects.com/zos/rmsportal/KDpgvguMpGfqaHPjicRK.svg'}
         />
-        <Paragraph style={{ fontWeight: 500, opacity: '.75', color: '#f8fafc', margin: 0 }}>05/12/2025</Paragraph>
+        <Paragraph style={{ fontWeight: 500, opacity: '.75', color: '#f8fafc', margin: 0 }}>
+          {dayjs(blog?.createdAt).format('DD-MM-YYYY')}
+        </Paragraph>
       </Flex>
     </Card>
   )
