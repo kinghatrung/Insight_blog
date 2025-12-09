@@ -98,6 +98,10 @@ h6 {
   background-color: rgb(30 41 59 / 1);
 }
 
+.box-search .ant-modal-header {
+  background-color: hsl(222.2 84% 4.9%);
+}
+
 /* setting content */
 #blog-content img {
   max-width: 100%;
@@ -128,8 +132,4 @@ h6 {
 .box-search .ant-modal-content {
   background-color: hsl(222.2 84% 4.9%);
   border: 1px solid hsl(217.2 32.6% 17.5%);
-}
-
-.box-search .ant-modal-header {
-  background-color: hsl(222.2 84% 4.9%);
 }

@@ -8,7 +8,7 @@ export const blogService = {
     })
     return res.data
   },
-  getBlogsActive: async (search: string) => {
+  getBlogsActive: async (search?: string) => {
     const res = await authorizedAxiosInstance.get('/blogs/active', { params: { search } })
     return res.data
   },

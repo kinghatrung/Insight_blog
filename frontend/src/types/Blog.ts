@@ -1,16 +1,5 @@
-export interface Author {
-  _id: string
-  username: string
-  displayName: string
-  avatarUrl: string
-}
-
-export interface Category {
-  _id: string
-  title?: string
-  slug: string
-  status: string
-}
+import type { CategoryType } from '~/types/Category'
+import type { Author } from '~/types/User'
 
 interface FileListItem {
   url?: string
@@ -22,7 +11,7 @@ export interface Blog {
   title: string
   description: string
   content: string
-  category: string | Category
+  category: CategoryType
   thumbnail: string
   slug: string
   status: string

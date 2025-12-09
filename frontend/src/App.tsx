@@ -7,6 +7,7 @@ import Dashboard from '~/pages/Dashboard'
 import DetailBlog from '~/pages/DetailBlog'
 import Category from '~/pages/Category'
 import About from '~/pages/About'
+import DetailCategory from '~/pages/DetailCategory'
 
 import ProtectedRoute from '~/components/ProtectedRoute'
 import ScrollTop from '~/components/ScrollTop'
@@ -37,6 +38,7 @@ function App() {
           <Route path='/category' element={<Category />} />
           <Route path='/aboutme' element={<About />} />
           <Route path='/detail/:slug' element={<DetailBlog />} />
+          <Route path='/category/:slug' element={<DetailCategory />} />
         </Route>
         <Route element={<ProtectedRoute />}>
           <Route element={<Wrapper layout={ProtectedLayout} />}>

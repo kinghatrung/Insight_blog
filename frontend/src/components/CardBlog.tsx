@@ -45,7 +45,7 @@ function CardBlog({ blog, direction = 'vertical' }: CardBlogProps) {
     >
       <Link to='/category'>
         <Badge
-          count='Công nghệ'
+          count={blog?.category.title}
           style={{
             backgroundColor: '#2c3e50',
             color: '#7dd3fc',

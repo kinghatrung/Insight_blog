@@ -67,6 +67,7 @@ const blogService = {
       }
       const blogsActive = await Blog.find(query)
         .populate("author", "username displayName avatarUrl")
+        .populate("category", "title")
         .sort({ createdAt: -1 });
       return blogsActive;
     } catch (error) {

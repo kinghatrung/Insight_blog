@@ -10,7 +10,15 @@ const categoryService = {
       throw error;
     }
   },
-  createCategory: async (title, status) => {
+  getCategoriesActive: async () => {
+    try {
+      const categories = await Category.find({ status: "active" }).populate("blogs");
+      return categories;
+    } catch (error) {
+      throw error;
+    }
+  },
+  createCategory: async (title, status, description) => {
     try {
       const slug = slugify(title);
       const category = await Category.findOne({ slug });
@@ -19,6 +27,7 @@ const categoryService = {
         title,
         slug,
         status,
+        description,
       });
       await newCategory.save();
       return newCategory;
@@ -26,7 +35,7 @@ const categoryService = {
       throw error;
     }
   },
-  editCategory: async (id, title, status) => {
+  editCategory: async (id, title, status, description) => {
     try {
       const category = await Category.findOne({ _id: id });
       if (!category) throw new Error("Thể loại không tồn tại");
@@ -35,6 +44,7 @@ const categoryService = {
         updateData.title = title;
         updateData.slug = slugify(title);
       }
+      if (description) updateData.description = description;
       if (status !== undefined) updateData.status = status;
       const updatedCategory = await Category.findByIdAndUpdate(id, { $set: updateData }, { new: true });
       return updatedCategory;

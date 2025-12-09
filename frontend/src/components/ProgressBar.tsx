@@ -1,5 +1,3 @@
-import { Affix } from 'antd'
-
 interface Heading {
   id: string
   text: string
@@ -21,47 +19,54 @@ function ProgressBar({ percent, headings }: ProgressBarProps) {
   }
 
   return (
-    <Affix offsetTop={100}>
-      <div style={{ display: 'flex', gap: '16px', alignItems: 'flex-start' }}>
+    <div style={{ display: 'flex', gap: '16px', alignItems: 'stretch' }}>
+      <div
+        style={{
+          position: 'relative',
+          width: 4,
+          height: 288,
+          borderRadius: 8,
+          backgroundColor: 'rgb(245 230 255 / 1)'
+        }}
+      >
         <div
           style={{
-            position: 'relative',
-            width: 4,
-            height: 288,
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            bottom: 0,
+            width: '100%',
+            height: `${percent}%`,
+            backgroundColor: 'rgb(142 68 236 / 1)',
             borderRadius: 8,
-            backgroundColor: 'rgb(245 230 255 / 1)'
+            transition: 'height 0.2s linear'
           }}
-        >
-          <div
-            style={{
-              position: 'absolute',
-              top: 0,
-              left: 0,
-              bottom: 0,
-              width: '100%',
-              height: `${percent}%`,
-              backgroundColor: 'rgb(142 68 236 / 1)',
-              borderRadius: 8,
-              transition: 'height 0.2s linear'
-            }}
-          />
-        </div>
-        <ul style={{ listStyleType: 'none', fontSize: 14, fontWeight: 600, lineHeight: '20px' }}>
-          {headings.map((heading) => (
-            <li key={heading.id} style={{ paddingBlock: 6, paddingInline: 12 }}>
-              <a
-                onClick={() => handleScrollView(heading.id)}
-                className='text-index'
-                style={{ color: 'hsl(210 40% 98% / .85)', paddingLeft: heading.paddingLeft }}
-              >
-                {heading.text}
-              </a>
-            </li>
-          ))}
-        </ul>
-        <div>{}</div>
+        />
       </div>
-    </Affix>
+      <ul
+        style={{
+          listStyleType: 'none',
+          fontSize: 14,
+          fontWeight: 600,
+          lineHeight: '20px',
+          maxHeight: 'calc(100vh - 200px)',
+          overflowY: 'auto'
+        }}
+      >
+        {headings.map((heading) => (
+          <li key={heading.id} style={{ paddingBlock: 6, paddingInline: 12 }}>
+            <a
+              onClick={() => handleScrollView(heading.id)}
+              className='text-index'
+              style={{ color: 'hsl(210 40% 98% / .85)', paddingLeft: heading.paddingLeft }}
+            >
+              {heading.text}
+            </a>
+          </li>
+        ))}
+      </ul>
+      {/* <div>{}</div> */}
+    </div>
   )
 }
 

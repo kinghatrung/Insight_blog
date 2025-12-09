@@ -9,3 +9,10 @@ export interface User {
   createAt?: string
   updatedAt?: string
 }
+
+export interface Author {
+  _id: string
+  username: string
+  displayName: string
+  avatarUrl: string
+}

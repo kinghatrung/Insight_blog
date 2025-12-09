@@ -5,6 +5,10 @@ export const categoryService = {
     const res = await authorizedAxiosInstance.get('/categories')
     return res.data
   },
+  getCategoriesActive: async () => {
+    const res = await authorizedAxiosInstance.get('/categories/active')
+    return res.data
+  },
   createCategory: async (title: string, status: string) => {
     const res = await authorizedAxiosInstance.post('/categories/category', {
       title,

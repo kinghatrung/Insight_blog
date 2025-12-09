@@ -32,7 +32,7 @@ function UserMange() {
 
   const { data: categories } = useQuery({
     queryKey: ['categories'],
-    queryFn: () => categoryService.getCategories()
+    queryFn: () => categoryService.getCategoriesActive()
   })
 
   const handleDeleteBlog = async (idBlog: string) => {

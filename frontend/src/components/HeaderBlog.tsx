@@ -87,7 +87,7 @@ function HeaderBlog() {
         </NavLink>
         <NavLink to='/aboutme' className='nav-header'>
           <Title style={{ fontSize: '16px', color: '#f8fafc', fontWeight: 600, margin: 0 }} color='white'>
-            Về tôi
+            Về chúng tôi
           </Title>
         </NavLink>
         <NavLink to='/contact' className='nav-header'>
@@ -120,13 +120,17 @@ function HeaderBlog() {
           className='box-search'
           title='Tìm kiếm'
           width={770}
-          onCancel={() => setShowModal(!showModal)}
+          onCancel={() => {
+            setShowModal(!showModal)
+            setSearch('')
+          }}
           open={showModal}
           footer={false}
         >
           <p style={{ marginBottom: 12 }}>Tìm kiếm nội dung trên website:</p>
           <Input
             id='search'
+            value={search}
             onChange={(e) => setSearch(e.target.value)}
             style={{
               height: 40,
