@@ -4,6 +4,33 @@
   box-sizing: border-box;
 }
 
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  scroll-margin-top: 100px;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgb(15, 23, 42);
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgb(51, 65, 85);
+  border-radius: 8px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgb(71, 85, 105);
+}
+
 .nav-link {
   color: #f8fafc;
   transition: color 0.25s ease;
@@ -25,11 +52,17 @@
     background-color 0.3s,
     color 0.3s;
   text-decoration: none;
+  color: #f8fafc;
 }
 
 .nav-header:hover {
   background-color: rgba(255, 255, 255, 0.2);
   color: #f8fafc;
+}
+
+.nav-header-active {
+  background-color: rgba(255, 255, 255, 0.2) !important;
+  color: #f8fafc !important;
 }
 
 .zoom-on-hover {
@@ -41,6 +74,43 @@
   transform: scale(1.04);
 }
 
+.text-index:hover {
+  color: rgb(192 132 252 / 1) !important;
+}
+.text-index:focus-visible {
+  color: red !important;
+}
+
+/* Box search */
+.box-search {
+  color: hsl(215 20.2% 65.1%);
+  font-weight: 500;
+}
+
+.card-search {
+  border-radius: 12px;
+  transition:
+    background-color 0.3s,
+    color 0.3s;
+}
+
+.card-search:hover {
+  background-color: rgb(30 41 59 / 1);
+}
+
+/* setting content */
+#blog-content img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+  margin: 16px auto;
+  border-radius: 18px;
+}
+
+#blog-content li {
+  margin-left: 20px;
+}
+
 /*  Component Ant Design  */
 .ant-card {
   padding: 0 !important;
@@ -48,4 +118,18 @@
 
 .ant-card-body {
   padding: 16px !important;
+}
+
+.ant-modal-title {
+  font-size: 18px !important;
+  color: #f8fafc !important;
+}
+
+.box-search .ant-modal-content {
+  background-color: hsl(222.2 84% 4.9%);
+  border: 1px solid hsl(217.2 32.6% 17.5%);
+}
+
+.box-search .ant-modal-header {
+  background-color: hsl(222.2 84% 4.9%);
 }

@@ -24,7 +24,8 @@ const blogController = {
   },
   getBlogsActive: async (req, res) => {
     try {
-      const blogsActive = await blogService.getBlogsActive();
+      const { search } = req.query;
+      const blogsActive = await blogService.getBlogsActive(search);
 
       res.status(200).json({ blogsActive });
     } catch (error) {

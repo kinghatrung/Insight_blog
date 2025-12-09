@@ -79,7 +79,7 @@ function CardBlog({ blog, direction = 'vertical' }: CardBlogProps) {
           src={blog?.author.avatarUrl || 'https://gw.alipayobjects.com/zos/rmsportal/KDpgvguMpGfqaHPjicRK.svg'}
         />
         <Paragraph style={{ fontWeight: 500, opacity: '.75', color: '#f8fafc', margin: 0 }}>
-          {dayjs(blog?.createdAt).format('DD-MM-YYYY')}
+          {dayjs(blog?.createdAt).format('DD/MM/YYYY')}
         </Paragraph>
       </Flex>
     </Card>

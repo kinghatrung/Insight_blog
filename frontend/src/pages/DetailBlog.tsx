@@ -1,16 +1,20 @@
 import { Badge, Row, Col, Flex, Typography, Avatar, Button } from 'antd'
-import { UserOutlined, SearchOutlined } from '@ant-design/icons'
+import dayjs from 'dayjs'
+import { UserOutlined, SearchOutlined, CalendarOutlined } from '@ant-design/icons'
 import { useQuery } from '@tanstack/react-query'
 import { Link, useParams } from 'react-router-dom'
 
 import CardBlog from '~/components/CardBlog'
 import { blogService } from '~/services/blogService'
+import ProgressBar from '~/components/ProgressBar'
+import { useReadingProgressAndHeadingData } from '~/hooks/useReadingProgressAndHeadingData'
 import type { Blog } from '~/types/Blog'
 
 const { Title, Paragraph } = Typography
 
 function DetailBlog() {
   const { slug } = useParams<{ slug: string }>()
+  const { headings, progress } = useReadingProgressAndHeadingData({ element: 'blog-content' })
 
   const { data: blog } = useQuery({
     queryKey: ['blog'],
@@ -43,14 +47,14 @@ function DetailBlog() {
           <Title level={2} style={{ fontWeight: 600, color: '#f8fafc' }}>
             {blogData?.title}
           </Title>
-          <Flex align='center' gap={12}>
+          <Flex align='center' gap={18}>
             <Avatar
               size={52}
               icon={<UserOutlined />}
               src={blogData?.author.avatarUrl || 'https://gw.alipayobjects.com/zos/rmsportal/KDpgvguMpGfqaHPjicRK.svg'}
             />
             <Paragraph style={{ fontWeight: 700, opacity: '.75', color: '#f8fafc', margin: 0, fontSize: 18 }}>
-              05/12/2025
+              <CalendarOutlined /> {dayjs(blogData?.createdAt).format('DD/MM/YYYY')}
             </Paragraph>
           </Flex>
           <Link to='/category'>
@@ -72,7 +76,7 @@ function DetailBlog() {
         </Flex>
       </Flex>
       <Flex>
-        <Flex style={{ flex: 3.5 }} vertical>
+        <Flex style={{ flex: 3 }} vertical>
           <div
             style={{
               padding: '32px 24px',
@@ -82,9 +86,10 @@ function DetailBlog() {
               lineHeight: '2'
             }}
           >
-            <div id='blog-content'>
-              <div dangerouslySetInnerHTML={{ __html: blogData?.content }} />
-            </div>
+            <Paragraph style={{ color: '#f8fafc', fontSize: 18, marginBottom: 20, lineHeight: '2' }}>
+              {blogData?.description}
+            </Paragraph>
+            <div id='blog-content' dangerouslySetInnerHTML={{ __html: blogData?.content }} />
           </div>
           <Flex align='center' gap={12} style={{ padding: '12px 24px', paddingBottom: 12 }}>
             <Paragraph style={{ fontWeight: 700, color: '#f8fafc', fontSize: 16, margin: 0 }}>Chia sẻ lên</Paragraph>
@@ -114,23 +119,41 @@ function DetailBlog() {
             </Flex>
           </div>
         </Flex>
-        <div style={{ color: '#f8fafc', flex: 1 }}>asdasdadada</div>
+        <div style={{ position: 'relative', color: '#f8fafc', flex: 1, flexDirection: 'column' }}>
+          <div
+            style={{
+              position: 'sticky',
+              top: 118,
+              padding: '24px 24px 18px',
+              backgroundColor: 'hsl(222.2 84% 4.9%)',
+              border: '2px solid hsl(217.2 32.6% 17.5%)',
+              borderRadius: 12
+            }}
+          >
+            <Title level={4} style={{ fontWeight: 600, color: '#f8fafc', marginBottom: 16 }}>
+              Mục lục
+            </Title>
+            <ProgressBar percent={progress} headings={headings} />
+          </div>
+        </div>
       </Flex>
-      <Row style={{ marginTop: 80 }}>
-        <Col span={24}>
-          <Title level={2} style={{ fontWeight: 600, color: '#f8fafc', marginBottom: 56, textAlign: 'center' }}>
-            Các bài viết mới nhất
-          </Title>
-        </Col>
+      {newBlogs?.length > 0 && (
+        <Row style={{ marginTop: 80 }}>
+          <Col span={24}>
+            <Title level={2} style={{ fontWeight: 600, color: '#f8fafc', marginBottom: 56, textAlign: 'center' }}>
+              Các bài viết mới nhất
+            </Title>
+          </Col>
 
-        <Row gutter={[40, 40]}>
-          {newBlogs?.map((blog: Blog) => (
-            <Col key={blog._id} xs={24} sm={12} md={12} lg={8} style={{ display: 'flex' }}>
-              <CardBlog blog={blog} />
-            </Col>
-          ))}
+          <Row gutter={[40, 40]}>
+            {newBlogs?.map((blog: Blog) => (
+              <Col key={blog._id} xs={24} sm={12} md={12} lg={8} style={{ display: 'flex' }}>
+                <CardBlog blog={blog} />
+              </Col>
+            ))}
+          </Row>
         </Row>
-      </Row>
+      )}
     </section>
   )
 }

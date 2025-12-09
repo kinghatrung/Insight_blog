@@ -43,7 +43,7 @@ const Page = () => {
       setLoginType('Đăng nhập')
     }
     if (loginType === 'Đăng nhập') {
-      dispatch(loginUser({ username, password }))
+      await dispatch(loginUser({ username, password })).unwrap()
       navigate('/')
     }
   }
@@ -57,7 +57,6 @@ const Page = () => {
     >
       <LoginFormPage
         style={{ fontFamily: "'Montserrat Alternates', sans-serif" }}
-        logo='https://github.githubassets.com/favicons/favicon.png'
         backgroundVideoUrl='https://gw.alipayobjects.com/v/huamei_gcee1x/afts/video/jXRBRK_VAwoAAAAAAAAAAAAAK4eUAQBr'
         title='Insight'
         containerStyle={{
@@ -91,7 +90,7 @@ const Page = () => {
                 Hoặc
               </span>
             </Divider>
-            <Space align='center' size={24}>
+            <Space align='center' size={12}>
               <div
                 style={{
                   display: 'flex',
@@ -330,7 +329,6 @@ const Page = () => {
 
 export default function Auth() {
   const { currentUser } = useSelector(authSelectors)
-
   if (currentUser) return <Navigate to='/' replace />
   return (
     <ProConfigProvider dark>

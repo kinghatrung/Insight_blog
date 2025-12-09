@@ -6,6 +6,7 @@ import { Button, Modal } from 'antd'
 import type { ActionType, ProColumns } from '@ant-design/pro-components'
 import type { UploadRequestOption } from 'rc-upload/lib/interface'
 import type { UploadFile } from 'antd'
+import type { ProFormInstance } from '@ant-design/pro-components'
 
 import { authSelectors } from '~/redux/slices/authSlice'
 import QuillEditor from '~/components/QuillEditor'
@@ -21,6 +22,7 @@ interface MyUploadFile extends UploadFile {
 }
 
 function UserMange() {
+  const formRef = useRef<ProFormInstance<BlogFromValues>>(null)
   const actionRef = useRef<ActionType | null>(null)
   const [isModalOpen, setIsModalOpen] = useState(false)
   const { currentUser } = useSelector(authSelectors)
@@ -59,6 +61,7 @@ function UserMange() {
     await blogService.createBlog(title, content, finalThumbnailUrl, status, userId, description)
     setIsModalOpen(false)
     actionRef.current?.reload()
+    formRef.current?.resetFields()
   }
 
   const handleUploadImage = async (options: UploadRequestOption) => {
@@ -76,7 +79,6 @@ function UserMange() {
 
   const deleteImageOnCloudinary = async (file: MyUploadFile) => {
     const publicId = file.response?.public_id || file.response || file?.public_id
-    console.log(file)
     if (!publicId) return
     await uploadService.deleteImage(publicId)
   }
@@ -259,6 +261,7 @@ function UserMange() {
 
       <Modal title='Tạo mới Blog' open={isModalOpen} footer={null} onCancel={() => setIsModalOpen(false)} width={1200}>
         <ProForm
+          formRef={formRef}
           initialValues={{ content: '' }}
           onFinish={(values) => handleCreateBlog(values as BlogFromValues)}
           submitter={{

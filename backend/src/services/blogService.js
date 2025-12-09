@@ -54,9 +54,15 @@ const blogService = {
       throw error;
     }
   },
-  getBlogsActive: async () => {
+  getBlogsActive: async (search) => {
     try {
-      const blogsActive = await Blog.find({ status: "active" }).populate("author", "username displayName avatarUrl");
+      const query = { status: "active" };
+      if (search) {
+        query.$or = [{ title: { $regex: search, $options: "i" } }, { description: { $regex: search, $options: "i" } }];
+      }
+      const blogsActive = await Blog.find(query)
+        .populate("author", "username displayName avatarUrl")
+        .sort({ createdAt: -1 });
       return blogsActive;
     } catch (error) {
       throw error;
