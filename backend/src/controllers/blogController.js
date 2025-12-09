@@ -13,6 +13,7 @@ const blogController = {
         startTime: req.query.startTime || "",
         endTime: req.query.endTime || "",
         author: req.query.author || "",
+        category: req.query.category || "",
       };
 
       const blogs = await blogService.getBlogs(page, pageSize, filters);
@@ -44,27 +45,25 @@ const blogController = {
   },
   createBlog: async (req, res) => {
     try {
-      const { title, content, thumbnail, status, author, description } = req.body;
+      const { title, content, thumbnail, status, author, description, category } = req.body;
 
-      const blog = await blogService.createBlog(title, content, thumbnail, status, author, description);
+      const blog = await blogService.createBlog(title, content, thumbnail, status, author, description, category);
       res.status(200).json({ blog, message: "Tạo blog thành công" });
     } catch (error) {
       res.status(500).json({ message: error.message });
     }
   },
-
   editBlog: async (req, res) => {
     try {
       const idBlog = req.params.id;
-      const { title, content, thumbnail, status, description } = req.body;
-      const updatedBlog = await blogService.editBlog(idBlog, title, content, thumbnail, status, description);
+      const { title, content, thumbnail, status, description, category } = req.body;
+      const updatedBlog = await blogService.editBlog(idBlog, title, content, thumbnail, status, description, category);
 
       res.status(200).json({ message: "Sửa blog thành công", updatedBlog });
     } catch (error) {
       res.status(500).json({ message: error.message });
     }
   },
-
   deleteBlog: async (req, res) => {
     try {
       const idBlog = req.params.id;

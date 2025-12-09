@@ -22,7 +22,8 @@ export const blogService = {
     thumbnail: string,
     status: string,
     author: string,
-    description: string
+    description: string,
+    category: string
   ) => {
     const res = await authorizedAxiosInstance.post('/blogs/blog', {
       title,
@@ -30,7 +31,8 @@ export const blogService = {
       thumbnail,
       status,
       author,
-      description
+      description,
+      category
     })
     return res.data
   },
@@ -38,6 +40,7 @@ export const blogService = {
     idBlog: string,
     title: string,
     content: string,
+    category: string,
     thumbnail: string,
     status: string,
     description: string
@@ -45,6 +48,7 @@ export const blogService = {
     const res = await authorizedAxiosInstance.put(`/blogs/blog/${idBlog}`, {
       title,
       content,
+      category,
       thumbnail,
       status,
       description

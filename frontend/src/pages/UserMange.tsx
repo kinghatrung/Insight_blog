@@ -2,7 +2,8 @@ import { useRef, useState } from 'react'
 import { PlusOutlined } from '@ant-design/icons'
 import { useSelector } from 'react-redux'
 import { ProTable, ProForm, ProFormText, ProFormSelect, ProFormUploadDragger } from '@ant-design/pro-components'
-import { Button, Modal } from 'antd'
+import { Button, Modal, Tag } from 'antd'
+import { useQuery } from '@tanstack/react-query'
 import type { ActionType, ProColumns } from '@ant-design/pro-components'
 import type { UploadRequestOption } from 'rc-upload/lib/interface'
 import type { UploadFile } from 'antd'
@@ -11,9 +12,11 @@ import type { ProFormInstance } from '@ant-design/pro-components'
 import { authSelectors } from '~/redux/slices/authSlice'
 import QuillEditor from '~/components/QuillEditor'
 import { blogService } from '~/services/blogService'
+import { categoryService } from '~/services/categoryService'
 import { uploadService } from '~/services/uploadService'
 import type { Blog, BlogFromValues } from '~/types/Blog'
 import type { User } from '~/types/User'
+import type { Category } from '~/types/Category'
 
 const { confirm } = Modal
 
@@ -26,6 +29,11 @@ function UserMange() {
   const actionRef = useRef<ActionType | null>(null)
   const [isModalOpen, setIsModalOpen] = useState(false)
   const { currentUser } = useSelector(authSelectors)
+
+  const { data: categories } = useQuery({
+    queryKey: ['categories'],
+    queryFn: () => categoryService.getCategories()
+  })
 
   const handleDeleteBlog = async (idBlog: string) => {
     confirm({
@@ -41,7 +49,7 @@ function UserMange() {
   }
 
   const handleCreateBlog = async (values: BlogFromValues) => {
-    const { title, status, content, thumbnail, description } = values
+    const { title, status, content, thumbnail, description, category } = values
     const userId = (currentUser as User)._id
     let finalThumbnailUrl: string | undefined = undefined
     if (Array.isArray(thumbnail)) {
@@ -58,7 +66,7 @@ function UserMange() {
       return
     }
 
-    await blogService.createBlog(title, content, finalThumbnailUrl, status, userId, description)
+    await blogService.createBlog(title, content, finalThumbnailUrl, status, userId, description, category)
     setIsModalOpen(false)
     actionRef.current?.reload()
     formRef.current?.resetFields()
@@ -113,8 +121,20 @@ function UserMange() {
       copyable: true,
       ellipsis: true,
       fieldProps: { placeholder: 'Mô tả Blog cần tìm' },
-      tooltip: 'Mô trả của Blog',
+      tooltip: 'Mô tả của Blog',
       formItemProps: { rules: [{ required: true, message: 'Vui lòng nhập mô tả' }] }
+    },
+    {
+      title: 'Thể loại',
+      dataIndex: 'category',
+      fieldProps: { placeholder: 'Thể loại Blog cần tìm' },
+      tooltip: 'Thể loại của Blog',
+      render: (_, record) => {
+        const cat = record.category
+        if (!cat) return 'Không xác định'
+        if (typeof cat === 'string') return 'Không xác định'
+        return <Tag color='blue'>{cat.title || 'Không xác định'}</Tag>
+      }
     },
     {
       disable: true,
@@ -217,10 +237,12 @@ function UserMange() {
         editable={{
           type: 'multiple',
           onSave: async (_, record) => {
+            const categoryId = typeof record.category === 'string' ? record.category : record.category?._id
             await blogService.editBlog(
               record._id,
               record.title,
               record.content,
+              categoryId,
               record.thumbnail,
               record.status,
               record.description
@@ -299,6 +321,20 @@ function UserMange() {
                 ]}
                 rules={[{ required: true, message: 'Vui lòng chọn trạng thái' }]}
               />
+
+              <ProFormSelect
+                name='category'
+                label='Thể loại'
+                fieldProps={{ style: { height: 40 } }}
+                options={
+                  categories?.map((cat: Category) => ({
+                    label: cat.title,
+                    value: cat._id
+                  })) || []
+                }
+                rules={[{ required: true, message: 'Vui lòng chọn thể loại' }]}
+              />
+
               <ProFormUploadDragger
                 max={1}
                 name='thumbnail'

@@ -5,6 +5,13 @@ export interface Author {
   avatarUrl: string
 }
 
+export interface Category {
+  _id: string
+  title?: string
+  slug: string
+  status: string
+}
+
 interface FileListItem {
   url?: string
   response?: string
@@ -15,6 +22,7 @@ export interface Blog {
   title: string
   description: string
   content: string
+  category: string | Category
   thumbnail: string
   slug: string
   status: string
@@ -29,12 +37,14 @@ export interface BlogFromValues {
   content: string
   thumbnail: string | FileListItem[]
   status: string
+  category: string
 }
 
 export interface GetBlogsParams {
   page: number
   pageSize: number
   title?: string
+  category?: string
   status?: string
   startTime?: string
   endTime?: string

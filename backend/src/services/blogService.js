@@ -6,7 +6,7 @@ import { parseDDMMYYYY } from "../utils/parseDDMMYYYY.js";
 const blogService = {
   getBlogs: async (page = 1, pageSize = 5, filters = {}) => {
     try {
-      const { title, status, startTime, endTime, author, description } = filters;
+      const { title, status, startTime, endTime, author, description, category } = filters;
       const query = {};
       if (title) {
         query.title = { $regex: title, $options: "i" };
@@ -15,6 +15,10 @@ const blogService = {
       if (description) {
         query.description = { $regex: description, $options: "i" };
       }
+
+      // if (category) {
+      //   query.category = { $regex: category, $options: "i" };
+      // }
 
       if (status) {
         query.status = status;
@@ -41,6 +45,7 @@ const blogService = {
       const total = await Blog.countDocuments(query);
       const blogs = await Blog.find(query)
         .populate("author", "username displayName")
+        .populate("category", "title slug")
         .sort({ createdAt: -1 })
         .skip(skip)
         .limit(pageSize)
@@ -77,7 +82,7 @@ const blogService = {
     }
   },
 
-  createBlog: async (title, content, thumbnail, status, author, description) => {
+  createBlog: async (title, content, thumbnail, status, author, description, category) => {
     try {
       const slug = slugify(title);
       const blog = await Blog.findOne({ slug });
@@ -91,6 +96,7 @@ const blogService = {
         status,
         author,
         description,
+        category,
       });
 
       await newBlog.save();
@@ -101,7 +107,7 @@ const blogService = {
     }
   },
 
-  editBlog: async (idBlog, title, content, thumbnail, status, description) => {
+  editBlog: async (idBlog, title, content, thumbnail, status, description, category) => {
     try {
       const blog = await Blog.findById(idBlog);
       if (!blog) throw new Error("Blog không tồn tại");
@@ -115,6 +121,7 @@ const blogService = {
       if (content) updateData.content = content;
       if (thumbnail) updateData.thumbnail = thumbnail;
       if (status !== undefined) updateData.status = status;
+      if (category) updateData.category = category;
       const updatedBlog = await Blog.findByIdAndUpdate(idBlog, { $set: updateData }, { new: true });
 
       return updatedBlog;
