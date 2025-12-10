@@ -1,22 +1,27 @@
-import { CrownFilled, SmileFilled } from '@ant-design/icons'
-import Dashboard from '~/pages/Dashboard'
-import Home from '~/pages/Home'
+import { ContainerFilled, DashboardFilled, OrderedListOutlined, UserOutlined } from '@ant-design/icons'
 
 export default {
   route: {
-    path: '/dashboard',
     routes: [
       {
-        path: '/dashboard',
+        path: '/admin/dashboard',
         name: 'Dash Board',
-        icon: <SmileFilled />,
-        component: <Dashboard />
+        icon: <DashboardFilled />
       },
       {
-        path: '/dashboard/blogs',
+        path: '/admin/users',
+        name: 'Người dùng',
+        icon: <UserOutlined />
+      },
+      {
+        path: '/admin/blogs',
         name: 'Bài viết',
-        icon: <CrownFilled />,
-        component: <Home />
+        icon: <ContainerFilled />
+      },
+      {
+        path: '/admin/categories',
+        name: 'Thể loại',
+        icon: <OrderedListOutlined />
       }
     ]
   }

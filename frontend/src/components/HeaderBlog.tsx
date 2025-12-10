@@ -191,7 +191,7 @@ function HeaderBlog() {
             >
               {roleUser === 'admin' && (
                 <Link
-                  to='/dashboard'
+                  to='/admin/dashboard'
                   className='nav-user'
                   style={{
                     display: 'block',

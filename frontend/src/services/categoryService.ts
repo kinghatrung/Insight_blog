@@ -1,8 +1,11 @@
 import authorizedAxiosInstance from '~/utils/authorizedAxios'
+import type { GetCategoryParams } from '~/types/Category'
 
 export const categoryService = {
-  getCategories: async () => {
-    const res = await authorizedAxiosInstance.get('/categories')
+  getCategories: async (params: GetCategoryParams) => {
+    const res = await authorizedAxiosInstance.get('/categories', {
+      params
+    })
     return res.data
   },
   getCategoriesActive: async () => {
@@ -13,17 +16,19 @@ export const categoryService = {
     const res = await authorizedAxiosInstance.get(`/categories/${slug}`)
     return res.data
   },
-  createCategory: async (title: string, status: string) => {
+  createCategory: async (title: string, status: string, description: string) => {
     const res = await authorizedAxiosInstance.post('/categories/category', {
       title,
-      status
+      status,
+      description
     })
     return res.data
   },
-  editCategory: async (idCategory: string, title: string, status: string) => {
+  editCategory: async (idCategory: string, title: string, status: string, description: string) => {
     const res = await authorizedAxiosInstance.put(`/categories/category/${idCategory}`, {
       title,
-      status
+      status,
+      description
     })
     return res.data
   },

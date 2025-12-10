@@ -1,11 +1,5 @@
-import UserMange from '~/pages/UserMange'
-
 function Dashboard() {
-  return (
-    <div>
-      <UserMange />
-    </div>
-  )
+  return <div>Dash Board</div>
 }
 
 export default Dashboard

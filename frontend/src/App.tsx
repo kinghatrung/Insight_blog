@@ -8,6 +8,9 @@ import DetailBlog from '~/pages/DetailBlog'
 import Category from '~/pages/Category'
 import About from '~/pages/About'
 import DetailCategory from '~/pages/DetailCategory'
+import BlogMange from '~/pages/BlogMange'
+import CategoryMange from '~/pages/ProtectedPage/CategoryMange'
+import UserMange from '~/pages/ProtectedPage/UserMange'
 
 import ProtectedRoute from '~/components/ProtectedRoute'
 import ScrollTop from '~/components/ScrollTop'
@@ -39,11 +42,14 @@ function App() {
           <Route path='/aboutme' element={<About />} />
           <Route path='/detail/:slug' element={<DetailBlog />} />
           <Route path='/category/:slug' element={<DetailCategory />} />
+          <Route path='/contact' element={<div>contact</div>} />
         </Route>
-        <Route element={<ProtectedRoute />}>
+        <Route path='/admin' element={<ProtectedRoute />}>
           <Route element={<Wrapper layout={ProtectedLayout} />}>
-            <Route path='/dashboard' element={<Dashboard />} />
-            <Route path='/dashboard/blogs' element={<Dashboard />} />
+            <Route index path='dashboard' element={<Dashboard />} />
+            <Route path='blogs' element={<BlogMange />} />
+            <Route path='categories' element={<CategoryMange />} />
+            <Route path='users' element={<UserMange />} />
           </Route>
         </Route>
         <Route path='/auth' element={<Auth />} />

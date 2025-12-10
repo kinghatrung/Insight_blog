@@ -24,7 +24,7 @@ interface MyUploadFile extends UploadFile {
   public_id?: string
 }
 
-function UserMange() {
+function BlogMange() {
   const formRef = useRef<ProFormInstance<BlogFromValues>>(null)
   const actionRef = useRef<ActionType | null>(null)
   const [isModalOpen, setIsModalOpen] = useState(false)
@@ -148,7 +148,7 @@ function UserMange() {
         placeholder: 'Trạng thái Blog cần tìm'
       },
       valueEnum: {
-        active: { text: 'Hoạt động', status: 'active' },
+        active: { text: 'Hoạt động', status: 'success' },
         processing: { text: 'Đang xử lý', status: 'processing' },
         error: { text: 'Tạm ngưng', status: 'error' }
       }
@@ -198,7 +198,7 @@ function UserMange() {
         <a key='edit' onClick={() => action?.startEditable?.(record._id)}>
           Sửa
         </a>,
-        <a key='view' href={`/blogs/${record.slug}`} target='_blank' rel='noopener noreferrer'>
+        <a key='view' href={`/detail/${record.slug}`} target='_blank' rel='noopener noreferrer'>
           Xem
         </a>,
         <a key='delete' style={{ color: 'red' }} onClick={() => handleDeleteBlog(record._id)}>
@@ -211,6 +211,7 @@ function UserMange() {
   return (
     <>
       <ProTable<Blog>
+        style={{ paddingTop: 20 }}
         columns={columns}
         actionRef={actionRef}
         dateFormatter='string'
@@ -384,4 +385,4 @@ function UserMange() {
   )
 }
 
-export default UserMange
+export default BlogMange

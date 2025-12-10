@@ -10,3 +10,18 @@ export interface CategoryType {
   createdAt: string
   updatedAt: string
 }
+
+export interface CategoryFromValues {
+  title: string
+  description: string
+  status: string
+}
+
+export interface GetCategoryParams {
+  page: number
+  pageSize: number
+  title?: string
+  status?: string
+  startTime?: string
+  endTime?: string
+}

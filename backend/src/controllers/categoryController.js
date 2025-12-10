@@ -3,7 +3,17 @@ import categoryService from "../services/categoryService.js";
 const categoryController = {
   getCategories: async (req, res) => {
     try {
-      const categories = await categoryService.getCategories();
+      const page = parseInt(req.query.page) || 1;
+      const pageSize = parseInt(req.query.pageSize) || 5;
+
+      const filters = {
+        title: req.query.title || "",
+        status: req.query.status || "",
+        startTime: req.query.startTime || "",
+        endTime: req.query.endTime || "",
+      };
+
+      const categories = await categoryService.getCategories(page, pageSize, filters);
 
       res.status(200).json(categories);
     } catch (error) {
