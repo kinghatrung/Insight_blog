@@ -8,7 +8,7 @@ import DetailBlog from '~/pages/DetailBlog'
 import Category from '~/pages/Category'
 import About from '~/pages/About'
 import DetailCategory from '~/pages/DetailCategory'
-import BlogMange from '~/pages/BlogMange'
+import BlogMange from '~/pages/ProtectedPage/BlogMange'
 import CategoryMange from '~/pages/ProtectedPage/CategoryMange'
 import UserMange from '~/pages/ProtectedPage/UserMange'
 
