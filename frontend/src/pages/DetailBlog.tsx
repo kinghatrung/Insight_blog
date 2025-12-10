@@ -133,6 +133,7 @@ function DetailBlog() {
             <Title level={4} style={{ fontWeight: 600, color: '#f8fafc', marginBottom: 16 }}>
               Mục lục
             </Title>
+
             <ProgressBar percent={progress} headings={headings} />
           </div>
         </div>

@@ -24,7 +24,6 @@ function ProgressBar({ percent, headings }: ProgressBarProps) {
         style={{
           position: 'relative',
           width: 4,
-          height: 288,
           borderRadius: 8,
           backgroundColor: 'rgb(245 230 255 / 1)'
         }}
@@ -48,9 +47,7 @@ function ProgressBar({ percent, headings }: ProgressBarProps) {
           listStyleType: 'none',
           fontSize: 14,
           fontWeight: 600,
-          lineHeight: '20px',
-          maxHeight: 'calc(100vh - 200px)',
-          overflowY: 'auto'
+          lineHeight: '20px'
         }}
       >
         {headings.map((heading) => (
@@ -65,7 +62,6 @@ function ProgressBar({ percent, headings }: ProgressBarProps) {
           </li>
         ))}
       </ul>
-      {/* <div>{}</div> */}
     </div>
   )
 }

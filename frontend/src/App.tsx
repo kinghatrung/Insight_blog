@@ -43,7 +43,7 @@ function App() {
         <Route element={<ProtectedRoute />}>
           <Route element={<Wrapper layout={ProtectedLayout} />}>
             <Route path='/dashboard' element={<Dashboard />} />
-            <Route path='/blogs' element={<Home />} />
+            <Route path='/dashboard/blogs' element={<Dashboard />} />
           </Route>
         </Route>
         <Route path='/auth' element={<Auth />} />

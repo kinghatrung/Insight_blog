@@ -16,7 +16,7 @@ import { categoryService } from '~/services/categoryService'
 import { uploadService } from '~/services/uploadService'
 import type { Blog, BlogFromValues } from '~/types/Blog'
 import type { User } from '~/types/User'
-import type { Category } from '~/types/Category'
+import type { CategoryType } from '~/types/Category'
 
 const { confirm } = Modal
 
@@ -327,7 +327,7 @@ function UserMange() {
                 label='Thể loại'
                 fieldProps={{ style: { height: 40 } }}
                 options={
-                  categories?.map((cat: Category) => ({
+                  categories?.map((cat: CategoryType) => ({
                     label: cat.title,
                     value: cat._id
                   })) || []

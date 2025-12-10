@@ -115,6 +115,7 @@ function ProtectedLayout({ children }: DefaultLayoutProps) {
           render: (props, dom) => {
             return (
               <Dropdown
+                placement='top'
                 menu={{
                   items: [
                     {
