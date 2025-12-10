@@ -6,6 +6,7 @@ const router = Router();
 
 router.get("/", categoryController.getCategories);
 router.get("/active", categoryController.getCategoriesActive);
+router.get("/:slug", categoryController.getCategoryBySlug);
 router.post("/category", categoryController.createCategory);
 router.put("/category/:id", categoryController.editCategory);
 router.delete("/del/:id", categoryController.deleteCategory);

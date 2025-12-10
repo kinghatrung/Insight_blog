@@ -19,6 +19,16 @@ const categoryController = {
       res.status(500).json({ message: error.message });
     }
   },
+  getCategoryBySlug: async (req, res) => {
+    try {
+      const slugCategory = req.params.slug;
+      const category = await categoryService.getCategoryBySlug(slugCategory);
+
+      res.status(200).json({ category });
+    } catch (error) {
+      res.status(500).json({ message: error.message });
+    }
+  },
   createCategory: async (req, res) => {
     try {
       const { title, status, description } = req.body;

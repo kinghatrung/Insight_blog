@@ -1,4 +1,5 @@
 import Category from "../models/Category.js";
+import Blog from "../models/Blog.js";
 import { slugify } from "../utils/slugify.js";
 
 const categoryService = {
@@ -14,6 +15,22 @@ const categoryService = {
     try {
       const categories = await Category.find({ status: "active" }).populate("blogs");
       return categories;
+    } catch (error) {
+      throw error;
+    }
+  },
+  getCategoryBySlug: async (slugCategory) => {
+    try {
+      const category = await Category.findOne({ slug: slugCategory }).lean();
+
+      const blogs = await Blog.find({ category: category._id })
+        .populate({ path: "author", select: "avatarUrl" })
+        .populate({ path: "category", select: "title" })
+        .lean();
+
+      category.blogs = blogs;
+
+      return category;
     } catch (error) {
       throw error;
     }
