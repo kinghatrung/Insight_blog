@@ -11,7 +11,6 @@ import type { UploadRequestOption } from 'rc-upload/lib/interface'
 import { uploadService } from '~/services/uploadService'
 import { authSelectors, editUser } from '~/redux/slices/authSlice'
 import { blogService } from '~/services/blogService'
-// import { userService } from '~/services/userService'
 import CardBlog from '~/components/CardBlog'
 import type { Blog } from '~/types/Blog'
 import type { UserFromValues } from '~/types/User'
@@ -121,7 +120,7 @@ function Profile() {
       key: '3',
       label: (
         <Title level={4} style={{ color: 'rgba(248, 250, 252, 0.5)', fontWeight: 600, margin: 0, padding: '0 32px' }}>
-          <RetweetOutlined style={{ marginRight: 6 }} /> Đã đăng
+          <RetweetOutlined style={{ marginRight: 6 }} /> Đã lưu
         </Title>
       ),
       children: <p>tab 3</p>

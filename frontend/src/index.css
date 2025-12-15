@@ -31,6 +31,7 @@ h6 {
   background: rgb(71, 85, 105);
 }
 
+/* CSS */
 .nav-link {
   color: #f8fafc;
   transition: color 0.25s ease;
@@ -77,8 +78,29 @@ h6 {
 .text-index:hover {
   color: rgb(192 132 252 / 1) !important;
 }
+
 .text-index:focus-visible {
   color: red !important;
+}
+
+.blog-complete {
+  margin-top: 8px;
+  padding-block: 6px;
+  padding-inline: 12px;
+  color: #f8fafc;
+  font-size: 18px;
+  font-weight: 600;
+
+  opacity: 0;
+  transform: translateY(20px);
+  transition:
+    opacity 0.8s ease,
+    transform 0.8s ease;
+}
+
+.blog-complete.show {
+  opacity: 1;
+  transform: translateY(0);
 }
 
 /* Input */

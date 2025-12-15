@@ -11,6 +11,8 @@ export interface User {
   username: string
   password: string
   displayName: string
+  blogsLike: Blog[]
+  blogsSave: Blog[]
   avatarUrl: string
   avatarId: string
   blogs?: Blog[]

@@ -15,6 +15,8 @@ export interface Blog {
   thumbnail: string
   slug: string
   status: string
+  likes: number
+  likeBy?: Author[]
   author: Author
   createdAt: string
   updatedAt: string

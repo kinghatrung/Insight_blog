@@ -6,6 +6,8 @@ const userSchema = new mongoose.Schema(
     hashPassword: { type: String, required: true },
     email: { type: String, required: true, unique: true, trim: true, lowercase: true },
     displayName: { type: String, required: true, trim: true },
+    blogsLike: [{ type: mongoose.Schema.Types.ObjectId, ref: "Blog" }],
+    blogsSave: [{ type: mongoose.Schema.Types.ObjectId, ref: "Blog" }],
     blogs: [{ type: mongoose.Schema.Types.ObjectId, ref: "Blog" }],
     role: { type: String, enum: ["custom", "admin"], default: "custom" },
     avatarUrl: { type: String },
