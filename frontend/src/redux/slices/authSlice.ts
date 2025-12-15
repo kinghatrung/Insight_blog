@@ -11,6 +11,17 @@ interface AuthState {
   loading: boolean
 }
 
+interface EditUserPayload {
+  idUser: string
+  data: {
+    displayName?: string
+    password?: string
+    avatarUrl?: string
+    avatarId?: string
+    role?: string
+  }
+}
+
 const initialState: AuthState = {
   currentUser: null,
   loading: false
@@ -24,6 +35,15 @@ export const loginUser = createAsyncThunk<User, { username: string; password: st
     const { accessToken } = res
     const infoUser = { accessToken, ...user }
     return infoUser
+  }
+)
+
+export const editUser = createAsyncThunk<User, EditUserPayload>(
+  'auth/editUser',
+  async ({ idUser, data }, { dispatch }) => {
+    await userService.editUsers(idUser, data)
+    const user = await dispatch(fetchMe()).unwrap()
+    return user
   }
 )
 
@@ -50,7 +70,18 @@ export const authSlice = createSlice({
         state.currentUser = action.payload
         state.loading = false
       })
-    builder
+
+      .addCase(editUser.pending, (state) => {
+        state.loading = true
+      })
+      .addCase(editUser.fulfilled, (state, action: PayloadAction<User>) => {
+        state.currentUser = action.payload
+        state.loading = false
+      })
+      .addCase(editUser.rejected, (state) => {
+        state.loading = false
+      })
+
       .addCase(logoutUser.pending, (state) => {
         state.loading = true
       })

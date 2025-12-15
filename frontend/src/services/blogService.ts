@@ -12,6 +12,11 @@ export const blogService = {
     const res = await authorizedAxiosInstance.get('/blogs/active', { params: { search } })
     return res.data
   },
+  getBlogsActiveForAuthor: async (idUser?: string) => {
+    if (!idUser) return []
+    const res = await authorizedAxiosInstance.get(`/blogs/active/${idUser}`)
+    return res.data
+  },
   getBlogBySlug: async (slug: string) => {
     const res = await authorizedAxiosInstance.get(`/blogs/${slug}`)
     return res.data

@@ -81,10 +81,25 @@ h6 {
   color: red !important;
 }
 
+/* Input */
+.dark-input .ant-input {
+  color: #f8fafc !important;
+  background-color: hsl(222.2 84% 4.9%) !important;
+  border-color: hsl(217.2 32.6% 17.5%) !important;
+}
+
+.dark-input .ant-input::placeholder {
+  color: rgba(248, 250, 252, 0.6);
+}
+
 /* Box search */
 .box-search {
   color: hsl(215 20.2% 65.1%);
   font-weight: 500;
+}
+
+.box-search .ant-modal-title {
+  color: #f8fafc;
 }
 
 .card-search {
@@ -131,4 +146,31 @@ h6 {
 .box-search .ant-modal-content {
   background-color: hsl(222.2 84% 4.9%);
   border: 1px solid hsl(217.2 32.6% 17.5%);
+}
+
+/* Tab ant design */
+.ant-tabs-nav::before {
+  border-bottom: none !important;
+}
+
+.ant-tabs-tab {
+  position: relative;
+  color: rgba(248, 250, 252, 0.5);
+}
+
+.ant-tabs-tab:not(.ant-tabs-tab-active):hover::after {
+  content: '';
+  position: absolute;
+  width: 100%;
+  bottom: 0;
+  height: 2px;
+  background-color: #f8fafc;
+}
+
+.ant-tabs-tab-active {
+  color: #f8fafc !important;
+}
+
+.ant-tabs-tab-active * {
+  color: #f8fafc !important;
 }

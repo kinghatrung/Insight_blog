@@ -5,6 +5,7 @@ const router = Router();
 
 router.get("/", blogController.getBlogs);
 router.get("/active", blogController.getBlogsActive);
+router.get("/active/:id", blogController.getBlogsActiveForAuthor);
 router.get("/:slug", blogController.getBlogBySlug);
 router.post("/blog", blogController.createBlog);
 router.put("/blog/:id", blogController.editBlog);

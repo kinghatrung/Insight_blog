@@ -1,3 +1,10 @@
+import type { Blog } from '~/types/Blog'
+
+interface Avatar {
+  url: string
+  public_id: string
+}
+
 export interface User {
   _id: string
   email: string
@@ -6,6 +13,7 @@ export interface User {
   displayName: string
   avatarUrl: string
   avatarId: string
+  blogs?: Blog[]
   role: string
   createAt: string
   updatedAt: string
@@ -23,8 +31,7 @@ export interface UserFromValues {
   username: string
   displayName: string
   role: string
-  avatarUrl?: string
-  avatarId?: string
+  avatarUrl: Avatar[]
   firstName: string
   lastName: string
   password: string

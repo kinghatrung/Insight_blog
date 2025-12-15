@@ -74,6 +74,20 @@ const blogService = {
       throw error;
     }
   },
+  getBlogsActiveForAuthor: async (idUser) => {
+    try {
+      const blogs = await Blog.find({
+        author: idUser,
+        status: "active",
+      })
+        .populate("author", "username displayName avatarUrl")
+        .populate("category", "title")
+        .sort({ createdAt: -1 });
+      return blogs;
+    } catch (error) {
+      throw error;
+    }
+  },
   getBlogBySlug: async (slugBlog) => {
     try {
       const blog = await Blog.findOne({ slug: slugBlog }).populate("author", "username displayName avatarUrl").lean();

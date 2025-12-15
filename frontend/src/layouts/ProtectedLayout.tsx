@@ -1,14 +1,15 @@
-import type { ReactNode } from 'react'
 import { PageContainer, ProCard, ProLayout } from '@ant-design/pro-components'
 import {
   InfoCircleFilled,
   LogoutOutlined,
   QuestionCircleFilled,
   SearchOutlined,
-  PlusCircleFilled
+  PlusCircleFilled,
+  UndoOutlined
 } from '@ant-design/icons'
 import { Dropdown, Descriptions, Input, theme } from 'antd'
 import { useLocation, useNavigate } from 'react-router-dom'
+import type { ReactNode } from 'react'
 
 import { useDispatch, useSelector } from 'react-redux'
 import defaultProps from '~/defaultSettings'
@@ -118,12 +119,8 @@ function ProtectedLayout({ children }: DefaultLayoutProps) {
                 placement='top'
                 menu={{
                   items: [
-                    {
-                      onClick: handleLogout,
-                      key: 'logout',
-                      icon: <LogoutOutlined />,
-                      label: 'Đăng xuất'
-                    }
+                    { onClick: handleLogout, key: 'logout', icon: <LogoutOutlined />, label: 'Đăng xuất' },
+                    { onClick: () => navigate('/'), key: 'return', icon: <UndoOutlined />, label: 'Quay lại' }
                   ]
                 }}
               >

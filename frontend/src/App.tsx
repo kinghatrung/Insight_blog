@@ -1,16 +1,18 @@
 import { Fragment } from 'react'
 import { BrowserRouter, Route, Routes, Outlet } from 'react-router'
 
-import Home from '~/pages/Home'
-import Auth from '~/pages/Auth'
-import Dashboard from '~/pages/Dashboard'
-import DetailBlog from '~/pages/DetailBlog'
-import Category from '~/pages/Category'
-import About from '~/pages/About'
-import DetailCategory from '~/pages/DetailCategory'
+import Home from '~/pages/PublicPage/Home'
+import Auth from '~/pages/PublicPage/Auth'
+import DetailBlog from '~/pages/PublicPage/DetailBlog'
+import Category from '~/pages/PublicPage/Category'
+import About from '~/pages/PublicPage/About'
+import DetailCategory from '~/pages/PublicPage/DetailCategory'
+
+import Dashboard from '~/pages/ProtectedPage/Dashboard'
 import BlogMange from '~/pages/ProtectedPage/BlogMange'
 import CategoryMange from '~/pages/ProtectedPage/CategoryMange'
 import UserMange from '~/pages/ProtectedPage/UserMange'
+import Profile from '~/pages/ProtectedPage/Profile'
 
 import ProtectedRoute from '~/components/ProtectedRoute'
 import ScrollTop from '~/components/ScrollTop'
@@ -43,6 +45,9 @@ function App() {
           <Route path='/detail/:slug' element={<DetailBlog />} />
           <Route path='/category/:slug' element={<DetailCategory />} />
           <Route path='/contact' element={<div>contact</div>} />
+          <Route element={<ProtectedRoute />}>
+            <Route path='/profile' element={<Profile />} />
+          </Route>
         </Route>
         <Route path='/admin' element={<ProtectedRoute />}>
           <Route element={<Wrapper layout={ProtectedLayout} />}>

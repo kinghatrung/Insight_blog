@@ -10,7 +10,7 @@ function Home() {
     queryKey: ['blogs'],
     queryFn: () => blogService.getBlogsActive()
   })
-  const blogsData = blogs?.blogsActive.slice(1)
+  const blogsData = blogs?.blogsActive?.slice(1)
   const firstBlog = blogs?.blogsActive?.[0]
 
   return (

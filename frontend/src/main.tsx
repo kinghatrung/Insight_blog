@@ -28,6 +28,12 @@ const config: ThemeConfig = {
     fontFamily: '"Montserrat Alternates", sans-serif',
     colorPrimary: '#1677ff',
     colorInfo: '#1677ff'
+  },
+  components: {
+    Tabs: {
+      itemActiveColor: '#f8fafc',
+      inkBarColor: '#f8fafc'
+    }
   }
 }
 

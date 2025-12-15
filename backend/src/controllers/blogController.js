@@ -33,6 +33,15 @@ const blogController = {
       res.status(500).json({ message: error.message });
     }
   },
+  getBlogsActiveForAuthor: async (req, res) => {
+    try {
+      const idUser = req.params.id;
+      const blogs = await blogService.getBlogsActiveForAuthor(idUser);
+      res.status(200).json({ blogs });
+    } catch (error) {
+      res.status(500).json({ message: error.message });
+    }
+  },
   getBlogBySlug: async (req, res) => {
     try {
       const slugBlog = req.params.slug;

@@ -265,7 +265,7 @@ function HeaderBlog() {
           )}
         >
           {currentUser ? (
-            <Avatar size={40} src={currentUser?.avatarUrl} />
+            <Avatar size={42} src={currentUser?.avatarUrl} alt={currentUser?.displayName} />
           ) : (
             <Button
               className='nav-link'
