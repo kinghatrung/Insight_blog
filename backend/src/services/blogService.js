@@ -110,9 +110,6 @@ const blogService = {
 
   editBlog: async (idBlog, title, content, thumbnail, status, description, category) => {
     try {
-      const blog = await Blog.findById(idBlog);
-      if (!blog) throw new Error("Blog không tồn tại");
-
       const updateData = {};
       if (title) {
         updateData.title = title;
@@ -123,8 +120,14 @@ const blogService = {
       if (thumbnail) updateData.thumbnail = thumbnail;
       if (status !== undefined) updateData.status = status;
       if (category) updateData.category = category;
-      const updatedBlog = await Blog.findByIdAndUpdate(idBlog, { $set: updateData }, { new: true });
-
+      const updatedBlog = await Blog.findByIdAndUpdate(
+        idBlog,
+        { $set: updateData },
+        { new: true, runValidators: true }
+      );
+      if (!updatedBlog) {
+        throw new Error("Blog không tồn tại");
+      }
       return updatedBlog;
     } catch (error) {
       throw error;

@@ -4,8 +4,8 @@ export interface User {
   username: string
   password: string
   displayName: string
-  avatarUrl?: string
-  avatarId?: string
+  avatarUrl: string
+  avatarId: string
   role: string
   createAt: string
   updatedAt: string

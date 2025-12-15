@@ -49,7 +49,7 @@ const categoryService = {
   },
   getCategoriesActive: async () => {
     try {
-      const categories = await Category.find({ status: "active" }).populate("blogs");
+      const categories = await Category.find({ status: "active" }).populate("blogs").sort({ createdAt: -1 });
       return categories;
     } catch (error) {
       throw error;

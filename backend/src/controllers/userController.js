@@ -42,6 +42,10 @@ const userController = {
   },
   editUser: async (req, res) => {
     try {
+      const idUser = req.params.id;
+      const { displayName, password, avatarUrl, avatarId, role } = req.body;
+      const user = await userService.editUser(idUser, displayName, password, avatarUrl, avatarId, role);
+      res.status(200).json({ message: `Cập nhập người dùng ${user.displayName} thành công` });
     } catch (error) {
       res.status(500).json({ message: error.message });
     }

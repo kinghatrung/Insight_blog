@@ -32,7 +32,13 @@ export const userService = {
     const res = await authorizedAxiosInstance.get('/users/me')
     return res.data.user
   },
-  editUsers: async () => {},
+  editUsers: async (
+    idUser: string,
+    data: { displayName?: string; password?: string; avatarUrl?: string; avatarId?: string; role?: string }
+  ) => {
+    const res = await authorizedAxiosInstance.put(`/users/user/${idUser}`, data)
+    return res.data
+  },
   deleteUsers: async (idUser: string) => {
     return await authorizedAxiosInstance.delete(`/del/${idUser}`)
   }

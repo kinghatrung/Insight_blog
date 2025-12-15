@@ -61,8 +61,26 @@ const userService = {
       throw error;
     }
   },
-  editUser: async () => {
+  editUser: async (idUser, displayName, password, avatarUrl, avatarId, role) => {
     try {
+      const updateData = {};
+      if (displayName) {
+        updateData.displayName = displayName;
+      }
+
+      if (avatarUrl) updateData.avatarUrl = avatarUrl;
+      if (avatarId) updateData.avatarId = avatarId;
+
+      if (role) {
+        updateData.role = role;
+      }
+      if (password) {
+        const hashedPassword = await bcrypt.hash(password, 10);
+        updateData.hashPassword = hashedPassword;
+      }
+      const updateUser = await User.findByIdAndUpdate(idUser, { $set: updateData }, { new: true, runValidators: true });
+      if (!updateUser) throw new Error("Người dùng không tồn tại");
+      return updateUser;
     } catch (error) {
       throw error;
     }
