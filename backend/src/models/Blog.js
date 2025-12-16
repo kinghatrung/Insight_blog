@@ -6,8 +6,6 @@ const blogSchema = new mongoose.Schema(
     slug: { type: String, required: true, unique: true },
     description: { type: String, required: true },
     content: { type: String, required: true },
-    likes: { type: Number, default: 0 },
-    likedBy: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
     thumbnail: { type: String },
     status: {
       type: String,

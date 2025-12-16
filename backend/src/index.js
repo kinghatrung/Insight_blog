@@ -27,8 +27,8 @@ app.use(
 
 // Routes
 app.use("/api/auth", authRouter);
-app.use("/api/blogs", blogRouter);
 app.use("/api/categories", categoryRouter);
+app.use("/api/blogs", blogRouter);
 
 app.use(authMiddleware.isAuthorized);
 app.use("/api/users", userRouter);

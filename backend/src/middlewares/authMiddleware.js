@@ -29,6 +29,16 @@ const authMiddleware = {
       res.status(401).json({ message: "Unauthorized" });
     }
   },
+  optionalAuth: async (req, res, next) => {
+    const accessTokenFromCookie = req.cookies?.accessToken;
+    if (!accessTokenFromCookie) return next();
+    try {
+      const accessTokenDecoded = await verifyToken(accessTokenFromCookie, process.env.JWT_SECRET_TOKEN);
+      const user = await User.findOne({ _id: accessTokenDecoded.userId }).select("-hashPassword");
+      if (user) req.user = user;
+    } catch (error) {}
+    next();
+  },
 };
 
 export default authMiddleware;

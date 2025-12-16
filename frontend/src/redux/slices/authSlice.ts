@@ -1,7 +1,7 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 import type { PayloadAction } from '@reduxjs/toolkit'
-import type { RootState } from '~/redux/store'
 
+import type { RootState } from '~/redux/store'
 import { authService } from '~/services/authService'
 import { userService } from '~/services/userService'
 import type { User } from '~/types/User'
@@ -47,14 +47,14 @@ export const editUser = createAsyncThunk<User, EditUserPayload>(
   }
 )
 
-export const fetchMe = createAsyncThunk<User>('auth/fetchMe', async () => {
-  const user = await userService.fetchMe()
-  return user
-})
-
 export const logoutUser = createAsyncThunk('auth/logoutUser', async () => {
   const res = await authService.logout()
   return res.data
+})
+
+export const fetchMe = createAsyncThunk<User>('auth/fetchMe', async () => {
+  const user = await userService.fetchMe()
+  return user
 })
 
 export const authSlice = createSlice({

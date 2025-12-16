@@ -4,6 +4,7 @@ import { persistReducer } from 'redux-persist'
 import storage from 'redux-persist/lib/storage'
 
 import { authReducer } from '~/redux/slices/authSlice'
+import { blogLikeReducer } from '~/redux/slices/blogLikeSlice'
 
 const persistConfig = {
   key: 'root',
@@ -12,7 +13,8 @@ const persistConfig = {
 }
 
 const reducers = combineReducers({
-  auth: authReducer
+  auth: authReducer,
+  blogLike: blogLikeReducer
 })
 
 const persistedReducer = persistReducer(persistConfig, reducers)

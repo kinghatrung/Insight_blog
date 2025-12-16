@@ -1,5 +1,9 @@
+import mongoose from "mongoose";
+
 import Blog from "../models/Blog.js";
 import User from "../models/User.js";
+import Like from "../models/Like.js";
+import Save from "../models/Save.js";
 import { slugify } from "../utils/slugify.js";
 import { parseDDMMYYYY } from "../utils/parseDDMMYYYY.js";
 
@@ -88,15 +92,118 @@ const blogService = {
       throw error;
     }
   },
-  getBlogBySlug: async (slugBlog) => {
+  getBlogBySlug: async (slugBlog, userId) => {
     try {
       const blog = await Blog.findOne({ slug: slugBlog }).populate("author", "username displayName avatarUrl").lean();
-      return blog;
+      if (!blog) return null;
+
+      const [isLiked, likesCount, isSaved] = await Promise.all([
+        userId ? Like.exists({ blogId: blog._id, userId }) : false,
+        Like.countDocuments({ blogId: blog._id }),
+        userId ? Save.exists({ blogId: blog._id, userId }) : false,
+      ]);
+
+      return { ...blog, isLiked: !!isLiked, likesCount, isSaved };
     } catch (error) {
       throw error;
     }
   },
+  getLikeBlog: async (userId) => {
+    try {
+      const likes = await Like.find({ userId }).select("blogId").lean();
 
+      const blogIds = likes.map((like) => like.blogId);
+
+      if (!blogIds.length) return [];
+      const blogs = await Blog.find({
+        _id: { $in: blogIds },
+        status: "active",
+      })
+        .sort({ createdAt: -1 })
+        .populate("author", "displayName avatarUrl")
+        .populate("category", "name slug");
+
+      return blogs;
+    } catch (error) {
+      throw error;
+    }
+  },
+  likeBlog: async (id, userId) => {
+    const session = await mongoose.startSession();
+    session.startTransaction();
+
+    try {
+      await Like.create([{ blogId: id, userId }], { session });
+      await session.commitTransaction();
+    } catch (error) {
+      await session.abortTransaction();
+      if (error.code === 11000) return;
+      throw error;
+    } finally {
+      session.endSession();
+    }
+  },
+  deleteLikeBlog: async (id, userId) => {
+    const session = await mongoose.startSession();
+    session.startTransaction();
+    try {
+      await Like.deleteOne({ blogId: id, userId }, { session });
+      await session.commitTransaction();
+    } catch (error) {
+      await session.abortTransaction();
+      throw error;
+    } finally {
+      session.endSession();
+    }
+  },
+  getSaveBlog: async (userId) => {
+    try {
+      const likes = await Save.find({ userId }).select("blogId").lean();
+
+      const blogIds = likes.map((like) => like.blogId);
+
+      if (!blogIds.length) return [];
+      const blogs = await Blog.find({
+        _id: { $in: blogIds },
+        status: "active",
+      })
+        .sort({ createdAt: -1 })
+        .populate("author", "displayName avatarUrl")
+        .populate("category", "name slug");
+
+      return blogs;
+    } catch (error) {
+      throw error;
+    }
+  },
+  saveBlog: async (id, userId) => {
+    const session = await mongoose.startSession();
+    session.startTransaction();
+
+    try {
+      await Save.create([{ blogId: id, userId }], { session });
+      await session.commitTransaction();
+    } catch (error) {
+      await session.abortTransaction();
+      if (error.code === 11000) return;
+      throw error;
+    } finally {
+      session.endSession();
+    }
+  },
+  deleteSaveBlog: async (id, userId) => {
+    const session = await mongoose.startSession();
+    session.startTransaction();
+    try {
+      await Save.deleteOne({ blogId: id, userId }, { session });
+      await session.commitTransaction();
+    } catch (error) {
+      await session.abortTransaction();
+      throw error;
+    } finally {
+      session.endSession();
+    }
+  },
   createBlog: async (title, content, thumbnail, status, author, description, category) => {
     try {
       const slug = slugify(title);

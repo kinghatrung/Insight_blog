@@ -12,6 +12,7 @@ import { uploadService } from '~/services/uploadService'
 import { authSelectors, editUser } from '~/redux/slices/authSlice'
 import { blogService } from '~/services/blogService'
 import CardBlog from '~/components/CardBlog'
+import ModalFormBlog from '~/components/ModalFormBlog'
 import type { Blog } from '~/types/Blog'
 import type { UserFromValues } from '~/types/User'
 import type { AppDispatch } from '~/redux/store'
@@ -23,7 +24,8 @@ interface MyUploadFile extends UploadFile {
 }
 
 function Profile() {
-  const [isModalOpen, setIsModalOpen] = useState(false)
+  const [isModalEditOpen, setIsModalEditOpen] = useState(false)
+  const [isModalCreateOpen, setIsModalCreateOpen] = useState(false)
   const formRef = useRef<ProFormInstance<UserFromValues>>(null)
   const dispatch = useDispatch<AppDispatch>()
   const { currentUser } = useSelector(authSelectors)
@@ -31,7 +33,18 @@ function Profile() {
     queryKey: ['blogs'],
     queryFn: () => blogService.getBlogsActiveForAuthor(currentUser?._id)
   })
+  const { data: blogsLiked } = useQuery({
+    queryKey: ['blogsLiked'],
+    queryFn: () => blogService.getBlogsLiked(currentUser?._id)
+  })
+  const { data: blogsSaved } = useQuery({
+    queryKey: ['blogsSaved'],
+    queryFn: () => blogService.getBlogsSave(currentUser?._id)
+  })
+
   const blogs = blogsAuthor?.blogs
+  const blogsLike = blogsLiked?.blogs
+  const blogsSave = blogsSaved?.blogs
 
   const handleEditUser = async (values: UserFromValues) => {
     const { displayName, password, avatarUrl } = values
@@ -53,12 +66,12 @@ function Profile() {
       payload.password = password
     }
     if (Object.keys(payload).length === 0) {
-      setIsModalOpen(false)
+      setIsModalEditOpen(false)
       return
     }
 
     await dispatch(editUser({ idUser: currentUser!._id, data: payload })).unwrap()
-    setIsModalOpen(false)
+    setIsModalEditOpen(false)
     formRef.current?.resetFields()
   }
 
@@ -94,7 +107,7 @@ function Profile() {
           {blogs?.length === 0 ? (
             <Col span={24}>
               <Title level={4} style={{ color: '#f8fafc', margin: 0, textAlign: 'center' }}>
-                Chưa có Blogs nào...
+                Chưa có Blogs nào được tạo...
               </Title>
             </Col>
           ) : (
@@ -114,7 +127,23 @@ function Profile() {
           <HeartOutlined style={{ marginRight: 6 }} /> Yêu thích
         </Title>
       ),
-      children: <p>tab 2</p>
+      children: (
+        <Row gutter={[40, 40]} style={{ marginTop: 32 }}>
+          {blogsLike?.length === 0 ? (
+            <Col span={24}>
+              <Title level={4} style={{ color: '#f8fafc', margin: 0, textAlign: 'center' }}>
+                Chưa có Blogs nào được thích...
+              </Title>
+            </Col>
+          ) : (
+            blogsLike?.map((blog: Blog) => (
+              <Col key={blog._id} xs={24} sm={12} md={12} lg={8} style={{ display: 'flex' }}>
+                <CardBlog blog={blog} />
+              </Col>
+            ))
+          )}
+        </Row>
+      )
     },
     {
       key: '3',
@@ -123,7 +152,23 @@ function Profile() {
           <RetweetOutlined style={{ marginRight: 6 }} /> Đã lưu
         </Title>
       ),
-      children: <p>tab 3</p>
+      children: (
+        <Row gutter={[40, 40]} style={{ marginTop: 32 }}>
+          {blogsSave?.length === 0 ? (
+            <Col span={24}>
+              <Title level={4} style={{ color: '#f8fafc', margin: 0, textAlign: 'center' }}>
+                Chưa có Blogs nào được lưu...
+              </Title>
+            </Col>
+          ) : (
+            blogsSave?.map((blog: Blog) => (
+              <Col key={blog._id} xs={24} sm={12} md={12} lg={8} style={{ display: 'flex' }}>
+                <CardBlog blog={blog} />
+              </Col>
+            ))
+          )}
+        </Row>
+      )
     }
   ]
 
@@ -140,7 +185,7 @@ function Profile() {
           </Flex>
           <Flex gap={12}>
             <Button
-              onClick={() => setIsModalOpen(!isModalOpen)}
+              onClick={() => setIsModalEditOpen(!isModalEditOpen)}
               style={{
                 fontSize: 16,
                 color: '#f8fafc',
@@ -158,9 +203,9 @@ function Profile() {
               className='box-search'
               title={`Sửa thông tin cá nhân - ${currentUser?.displayName}`}
               width={1000}
-              open={isModalOpen}
+              open={isModalEditOpen}
               footer={false}
-              onCancel={() => setIsModalOpen(!isModalOpen)}
+              onCancel={() => setIsModalEditOpen(!isModalEditOpen)}
             >
               <ProForm
                 formRef={formRef}
@@ -241,6 +286,7 @@ function Profile() {
               </ProForm>
             </Modal>
             <Button
+              onClick={() => setIsModalCreateOpen(!isModalCreateOpen)}
               style={{
                 fontSize: 16,
                 color: '#f8fafc',
@@ -254,6 +300,7 @@ function Profile() {
             >
               Viết Blog
             </Button>
+            <ModalFormBlog isModalOpen={isModalCreateOpen} setIsModalOpen={setIsModalCreateOpen} />
           </Flex>
 
           <Flex gap={12} vertical>

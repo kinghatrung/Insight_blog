@@ -6,7 +6,7 @@ import { blogService } from '~/services/blogService'
 import type { Blog } from '~/types/Blog'
 
 function Home() {
-  const { data: blogs } = useQuery({
+  const { data: blogs, isLoading } = useQuery({
     queryKey: ['blogs'],
     queryFn: () => blogService.getBlogsActive()
   })
@@ -15,14 +15,13 @@ function Home() {
 
   return (
     <Row gutter={[40, 40]}>
-      <Row style={{ marginBottom: 80 }}>
-        <Col>
-          <CardBlog blog={firstBlog} direction='horizontal' />
-        </Col>
-      </Row>
+      <Col span={24} style={{ marginBottom: 80 }}>
+        <CardBlog blog={firstBlog} direction='horizontal' />
+      </Col>
+
       {blogsData?.map((blog: Blog) => (
         <Col key={blog._id} xs={24} sm={12} md={12} lg={8} style={{ display: 'flex' }}>
-          <CardBlog blog={blog} />
+          <CardBlog blog={blog} loading={isLoading} />
         </Col>
       ))}
     </Row>

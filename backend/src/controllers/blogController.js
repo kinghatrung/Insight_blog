@@ -45,9 +45,67 @@ const blogController = {
   getBlogBySlug: async (req, res) => {
     try {
       const slugBlog = req.params.slug;
-      const blog = await blogService.getBlogBySlug(slugBlog);
-
+      const userId = req.user?.id || null;
+      const blog = await blogService.getBlogBySlug(slugBlog, userId);
       res.status(200).json({ blog });
+    } catch (error) {
+      res.status(500).json({ message: error.message });
+    }
+  },
+  getLikeBlog: async (req, res) => {
+    try {
+      const userId = req.params.id;
+      const blogs = await blogService.getLikeBlog(userId);
+      res.status(200).json({ blogs });
+    } catch (error) {
+      res.status(500).json({ message: error.message });
+    }
+  },
+  likeBlog: async (req, res) => {
+    try {
+      const userId = req.user.id;
+      const id = req.params.id;
+      await blogService.likeBlog(id, userId);
+      res.sendStatus(200);
+    } catch (error) {
+      res.status(500).json({ message: error.message });
+    }
+  },
+  deleteLikeBlog: async (req, res) => {
+    try {
+      const userId = req.user.id;
+      const id = req.params.id;
+      await blogService.deleteLikeBlog(id, userId);
+      res.sendStatus(200);
+    } catch (error) {
+      res.status(500).json({ message: error.message });
+    }
+  },
+  getSaveBlog: async (req, res) => {
+    try {
+      const userId = req.params.id;
+      const blogs = await blogService.getSaveBlog(userId);
+      res.status(200).json({ blogs });
+    } catch (error) {
+      res.status(500).json({ message: error.message });
+    }
+  },
+  saveBlog: async (req, res) => {
+    try {
+      const userId = req.user.id;
+      const id = req.params.id;
+      await blogService.saveBlog(id, userId);
+      res.status(200).json({ message: "Lưu blog thành công" });
+    } catch (error) {
+      res.status(500).json({ message: error.message });
+    }
+  },
+  deleteSaveBlog: async (req, res) => {
+    try {
+      const userId = req.user.id;
+      const id = req.params.id;
+      await blogService.deleteSaveBlog(id, userId);
+      res.status(200).json({ message: "Bỏ lưu blog thành công" });
     } catch (error) {
       res.status(500).json({ message: error.message });
     }

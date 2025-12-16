@@ -34,22 +34,6 @@ function UserMange() {
   const handleCreateUser = async (values: UserFromValues) => {
     const { username, email, firstName, lastName, password, avatarUrl } = values
     const { url, public_id } = avatarUrl[0]
-
-    // let finalAvatarUrl: string | undefined = undefined
-    // let finalAvatarId
-    // if (Array.isArray(avatarUrl)) {
-    //   const fileObject = avatarUrl[0]
-    //   if (fileObject && typeof fileObject === 'object') {
-    //     finalAvatarUrl = fileObject.url || fileObject.response
-    //     finalAvatarId = fileObject.public_id
-    //   }
-    // } else if (typeof avatarUrl === 'string') {
-    //   finalAvatarUrl = avatarUrl
-    // }
-    // if (!finalAvatarUrl) {
-    //   console.error('Lỗi: Không tìm thấy URL AvatarUrl hợp lệ.')
-    //   return
-    // }
     await userService.createUser(username, password, email, firstName, lastName, url, public_id)
     setIsModalOpen(false)
     actionRef.current?.reload()
@@ -72,7 +56,6 @@ function UserMange() {
   const handleUploadImage = async (options: UploadRequestOption) => {
     const { file, onSuccess, onError } = options
     const fileToUpload = file as File
-
     try {
       const uploadedFile = await uploadService.upload(fileToUpload)
       const imageUrl = uploadedFile.data
@@ -112,6 +95,7 @@ function UserMange() {
       render: (_, record) => (
         <Flex gap={8} align='center'>
           <Image
+            style={{ objectFit: 'cover' }}
             src={record.avatarUrl}
             alt={record.displayName}
             width={80}

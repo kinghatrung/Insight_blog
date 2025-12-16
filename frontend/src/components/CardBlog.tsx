@@ -1,4 +1,4 @@
-import { Card, Avatar, Flex, Typography, Badge } from 'antd'
+import { Card, Avatar, Flex, Typography, Badge, Skeleton } from 'antd'
 import { UserOutlined } from '@ant-design/icons'
 import { Link } from 'react-router-dom'
 import dayjs from 'dayjs'
@@ -9,10 +9,13 @@ const { Title, Paragraph } = Typography
 
 interface CardBlogProps {
   direction?: string
+  loading: boolean
   blog: Blog
 }
 
-function CardBlog({ blog, direction = 'vertical' }: CardBlogProps) {
+function CardBlog({ blog, loading, direction = 'vertical' }: CardBlogProps) {
+  if (loading) return <Skeleton />
+
   return (
     <Card
       style={{

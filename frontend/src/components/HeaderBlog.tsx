@@ -90,11 +90,60 @@ function HeaderBlog() {
             Về chúng tôi
           </Title>
         </NavLink>
-        <NavLink to='/contact' className='nav-header'>
-          <Title style={{ fontSize: '16px', color: '#f8fafc', fontWeight: 600, margin: 0 }} color='white'>
+        <Dropdown
+          className='nav-header'
+          placement='bottomRight'
+          dropdownRender={() => (
+            <div
+              style={{
+                backgroundColor: 'hsl(222.2 84% 4.9%)',
+                border: '1px solid hsl(217.2 32.6% 17.5%)',
+                borderRadius: 8,
+                width: 200
+              }}
+            >
+              <a
+                href='https://www.facebook.com/huyen2706'
+                className='nav-user'
+                style={{
+                  display: 'block',
+                  fontWeight: 500,
+                  width: '100%',
+                  padding: '12px 16px',
+                  color: '#f8fafc',
+                  borderRadius: 6,
+                  backgroundColor: 'transparent',
+                  borderColor: 'hsl(217.2 32.6% 17.5%)'
+                }}
+              >
+                Facebook
+              </a>
+              <a
+                href='https://www.facebook.com/huyen2706'
+                className='nav-user'
+                style={{
+                  display: 'block',
+                  fontWeight: 500,
+                  width: '100%',
+                  padding: '12px 16px',
+                  color: '#f8fafc',
+                  borderRadius: 6,
+                  backgroundColor: 'transparent',
+                  borderColor: 'hsl(217.2 32.6% 17.5%)'
+                }}
+              >
+                Github
+              </a>
+            </div>
+          )}
+        >
+          <Title
+            style={{ cursor: 'pointer', fontSize: '16px', color: '#f8fafc', fontWeight: 600, margin: 0 }}
+            color='white'
+          >
             Liên hệ
           </Title>
-        </NavLink>
+        </Dropdown>
       </div>
 
       <Flex gap={12} align='center'>

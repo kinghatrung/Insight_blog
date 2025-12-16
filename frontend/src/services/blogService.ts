@@ -13,13 +13,32 @@ export const blogService = {
     return res.data
   },
   getBlogsActiveForAuthor: async (idUser?: string) => {
-    if (!idUser) return []
     const res = await authorizedAxiosInstance.get(`/blogs/active/${idUser}`)
     return res.data
   },
   getBlogBySlug: async (slug: string) => {
     const res = await authorizedAxiosInstance.get(`/blogs/${slug}`)
     return res.data
+  },
+  getBlogsLiked: async (idUser?: string) => {
+    const res = await authorizedAxiosInstance.get(`/blogs/${idUser}/like`)
+    return res.data
+  },
+  likeBlog: async (idBlog: string) => {
+    return await authorizedAxiosInstance.post(`/blogs/${idBlog}/like`)
+  },
+  unlikeBlog: async (idBlog: string) => {
+    return await authorizedAxiosInstance.delete(`/blogs/${idBlog}/like`)
+  },
+  getBlogsSave: async (idUser?: string) => {
+    const res = await authorizedAxiosInstance.get(`/blogs/${idUser}/save`)
+    return res.data
+  },
+  saveBlog: async (idBlog: string) => {
+    return await authorizedAxiosInstance.post(`/blogs/${idBlog}/save`)
+  },
+  unsaveBlog: async (idBlog: string) => {
+    return await authorizedAxiosInstance.delete(`/blogs/${idBlog}/save`)
   },
   createBlog: async (
     title: string,

@@ -44,7 +44,6 @@ function App() {
           <Route path='/aboutme' element={<About />} />
           <Route path='/detail/:slug' element={<DetailBlog />} />
           <Route path='/category/:slug' element={<DetailCategory />} />
-          <Route path='/contact' element={<div>contact</div>} />
           <Route element={<ProtectedRoute />}>
             <Route path='/profile' element={<Profile />} />
           </Route>
