@@ -1,6 +1,6 @@
 import { useState, useRef } from 'react'
 import { ProForm, ProFormText, ProFormUploadDragger } from '@ant-design/pro-components'
-import { Flex, Avatar, Button, Typography, Tabs, Col, Row, Modal } from 'antd'
+import { Flex, Avatar, Button, Typography, Tabs, Col, Row, Modal, Skeleton } from 'antd'
 import { useSelector, useDispatch } from 'react-redux'
 import { useQuery } from '@tanstack/react-query'
 import { HeartOutlined, ProductOutlined, RetweetOutlined } from '@ant-design/icons'
@@ -29,22 +29,22 @@ function Profile() {
   const formRef = useRef<ProFormInstance<UserFromValues>>(null)
   const dispatch = useDispatch<AppDispatch>()
   const { currentUser } = useSelector(authSelectors)
-  const { data: blogsAuthor } = useQuery({
+  const { data: blogsAuthor, isLoading: loadingAuthor } = useQuery({
     queryKey: ['blogs'],
     queryFn: () => blogService.getBlogsActiveForAuthor(currentUser?._id)
   })
-  const { data: blogsLiked } = useQuery({
+  const { data: blogsLiked, isLoading: loadingLiked } = useQuery({
     queryKey: ['blogsLiked'],
     queryFn: () => blogService.getBlogsLiked(currentUser?._id)
   })
-  const { data: blogsSaved } = useQuery({
+  const { data: blogsSaved, isLoading: loadingSaved } = useQuery({
     queryKey: ['blogsSaved'],
     queryFn: () => blogService.getBlogsSave(currentUser?._id)
   })
 
-  const blogs = blogsAuthor?.blogs
-  const blogsLike = blogsLiked?.blogs
-  const blogsSave = blogsSaved?.blogs
+  const blogs = loadingAuthor ? Array(6).fill(null) : blogsAuthor?.blogs
+  const blogsLike = loadingLiked ? Array(6).fill(null) : blogsLiked?.blogs
+  const blogsSave = loadingSaved ? Array(6).fill(null) : blogsSaved?.blogs
 
   const handleEditUser = async (values: UserFromValues) => {
     const { displayName, password, avatarUrl } = values
@@ -111,9 +111,9 @@ function Profile() {
               </Title>
             </Col>
           ) : (
-            blogs?.map((blog: Blog) => (
-              <Col key={blog._id} xs={24} sm={12} md={12} lg={8} style={{ display: 'flex' }}>
-                <CardBlog blog={blog} />
+            blogs?.map((blog: Blog, index: number) => (
+              <Col key={blog?._id || `skeleton-${index}`} xs={24} sm={12} md={12} lg={8} style={{ display: 'flex' }}>
+                <CardBlog blog={blog} loading={loadingAuthor} />
               </Col>
             ))
           )}
@@ -136,9 +136,9 @@ function Profile() {
               </Title>
             </Col>
           ) : (
-            blogsLike?.map((blog: Blog) => (
-              <Col key={blog._id} xs={24} sm={12} md={12} lg={8} style={{ display: 'flex' }}>
-                <CardBlog blog={blog} />
+            blogsLike?.map((blog: Blog, index: number) => (
+              <Col key={blog?._id || `skeleton-${index}`} xs={24} sm={12} md={12} lg={8} style={{ display: 'flex' }}>
+                <CardBlog blog={blog} loading={loadingLiked} />
               </Col>
             ))
           )}
@@ -161,9 +161,9 @@ function Profile() {
               </Title>
             </Col>
           ) : (
-            blogsSave?.map((blog: Blog) => (
-              <Col key={blog._id} xs={24} sm={12} md={12} lg={8} style={{ display: 'flex' }}>
-                <CardBlog blog={blog} />
+            blogsSave?.map((blog: Blog, index: number) => (
+              <Col key={blog?._id || `skeleton-${index}`} xs={24} sm={12} md={12} lg={8} style={{ display: 'flex' }}>
+                <CardBlog blog={blog} loading={loadingSaved} />
               </Col>
             ))
           )}
@@ -175,13 +175,32 @@ function Profile() {
   return (
     <div>
       <Flex gap={24} align='center'>
-        <Avatar size={228} style={{ marginBottom: 32 }} src={currentUser?.avatarUrl} alt={currentUser?.displayName} />
+        {loadingAuthor ? (
+          <Skeleton.Avatar shape='circle' size={228} style={{ marginBottom: 32, backgroundColor: '#1f2937' }} active />
+        ) : (
+          <Avatar size={228} style={{ marginBottom: 32 }} src={currentUser?.avatarUrl} alt={currentUser?.displayName} />
+        )}
         <Flex gap={12} vertical>
           <Flex gap={12} align='center'>
-            <Title level={3} style={{ color: '#f8fafc', margin: 0 }}>
-              {currentUser?.displayName}
-            </Title>
-            <Paragraph style={{ fontSize: 18, color: '#f8fafc', margin: 0 }}>{currentUser?.username}</Paragraph>
+            {loadingAuthor ? (
+              <>
+                <Skeleton.Input
+                  style={{ width: '100%', height: 24, borderRadius: 4, backgroundColor: '#1f2937' }}
+                  active
+                />
+                <Skeleton.Input
+                  style={{ width: '100%', height: 24, borderRadius: 4, backgroundColor: '#1f2937' }}
+                  active
+                />
+              </>
+            ) : (
+              <>
+                <Title level={3} style={{ color: '#f8fafc', margin: 0 }}>
+                  {currentUser?.displayName}
+                </Title>
+                <Paragraph style={{ fontSize: 18, color: '#f8fafc', margin: 0 }}>{currentUser?.username}</Paragraph>
+              </>
+            )}
           </Flex>
           <Flex gap={12}>
             <Button
@@ -303,19 +322,39 @@ function Profile() {
             <ModalFormBlog isModalOpen={isModalCreateOpen} setIsModalOpen={setIsModalCreateOpen} />
           </Flex>
 
-          <Flex gap={12} vertical>
-            <Flex gap={18}>
-              <Paragraph style={{ fontSize: 18, color: '#f8fafc', margin: 0, fontWeight: 600 }}>
-                10 <span style={{ color: 'rgb(107, 114, 128)', fontSize: 16, fontWeight: 500 }}>Blogs</span>
-              </Paragraph>
-              <Paragraph style={{ fontSize: 18, color: '#f8fafc', margin: 0, fontWeight: 600 }}>
-                1k2 <span style={{ color: 'rgb(107, 114, 128)', fontSize: 16, fontWeight: 500 }}>Lượt thích</span>
+          {loadingAuthor ? (
+            <Flex gap={12} vertical>
+              <Flex gap={18}>
+                <Skeleton.Input
+                  style={{ width: '100%', height: 24, borderRadius: 4, backgroundColor: '#1f2937' }}
+                  active
+                />
+                <Skeleton.Input
+                  style={{ width: '100%', height: 24, borderRadius: 4, backgroundColor: '#1f2937' }}
+                  active
+                />
+              </Flex>
+              <Skeleton.Input
+                style={{ width: '80%', height: 24, borderRadius: 4, backgroundColor: '#1f2937' }}
+                active
+              />
+            </Flex>
+          ) : (
+            <Flex gap={12} vertical>
+              <Flex gap={18}>
+                <Paragraph style={{ fontSize: 18, color: '#f8fafc', margin: 0, fontWeight: 600 }}>
+                  {blogs?.length}{' '}
+                  <span style={{ color: 'rgb(107, 114, 128)', fontSize: 16, fontWeight: 500 }}>Blogs đã đăng</span>
+                </Paragraph>
+                <Paragraph style={{ fontSize: 18, color: '#f8fafc', margin: 0, fontWeight: 600 }}>
+                  1k2 <span style={{ color: 'rgb(107, 114, 128)', fontSize: 16, fontWeight: 500 }}>Lượt thích</span>
+                </Paragraph>
+              </Flex>
+              <Paragraph style={{ fontSize: 16, color: '#f8fafc', margin: 0, fontWeight: 500 }}>
+                Chưa có tiểu sử...
               </Paragraph>
             </Flex>
-            <Paragraph style={{ fontSize: 16, color: '#f8fafc', margin: 0, fontWeight: 500 }}>
-              Chưa có tiểu sử...
-            </Paragraph>
-          </Flex>
+          )}
         </Flex>
       </Flex>
       <Tabs defaultActiveKey='1' items={items} />

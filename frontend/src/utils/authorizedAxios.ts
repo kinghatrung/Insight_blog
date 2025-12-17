@@ -49,13 +49,13 @@ authorizedAxiosInstance.interceptors.response.use(
     const originalRequest = error.config as AxiosRequestConfig & { _retry?: boolean }
 
     // TH1: Access token hết hạn hoặc không hợp lệ
-    if (status === 401) {
+    if (status === 410) {
       axiosReduxStore?.dispatch(logoutUser())
       return Promise.reject(error)
     }
 
     // TH2: Refresh token còn hạn => gọi API refresh
-    if (status === 410 && !originalRequest._retry) {
+    if (status === 401 && !originalRequest._retry) {
       originalRequest._retry = true
 
       if (!refreshTokenPromise) {

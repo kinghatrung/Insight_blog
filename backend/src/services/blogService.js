@@ -124,7 +124,7 @@ const blogService = {
       })
         .sort({ createdAt: -1 })
         .populate("author", "displayName avatarUrl")
-        .populate("category", "name slug");
+        .populate("category", "title slug");
 
       return blogs;
     } catch (error) {
@@ -172,7 +172,7 @@ const blogService = {
       })
         .sort({ createdAt: -1 })
         .populate("author", "displayName avatarUrl")
-        .populate("category", "name slug");
+        .populate("category", "title slug");
 
       return blogs;
     } catch (error) {

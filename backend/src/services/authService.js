@@ -3,7 +3,7 @@ import bcrypt from "bcrypt";
 import User from "../models/User.js";
 import { generateToken, verifyToken } from "../providers/jwtProvider.js";
 
-const ACCESS_TOKEN_TTL = "14d";
+const ACCESS_TOKEN_TTL = "15m";
 const REFRESH_TOKEN_TTL = "14d";
 
 const authService = {
