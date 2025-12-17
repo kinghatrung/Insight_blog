@@ -25,6 +25,13 @@ app.use(
   })
 );
 
+const delayMiddleware =
+  (ms = 2000) =>
+  (req, res, next) => {
+    setTimeout(next, ms);
+  };
+app.use(delayMiddleware(0));
+
 // Routes
 app.use("/api/auth", authRouter);
 app.use("/api/categories", categoryRouter);

@@ -14,7 +14,60 @@ interface CardBlogProps {
 }
 
 function CardBlog({ blog, loading, direction = 'vertical' }: CardBlogProps) {
-  if (loading) return <Skeleton />
+  if (loading)
+    return (
+      <Card
+        style={{
+          width: '100%',
+          background: 'transparent',
+          border: 'none',
+          padding: '16px',
+          display: 'flex',
+          gap: direction === 'horizontal' ? 32 : 0,
+          flexDirection: direction === 'horizontal' ? 'row' : 'column',
+          alignItems: direction === 'horizontal' ? 'center' : ''
+        }}
+        cover={
+          <Skeleton.Image
+            style={{
+              verticalAlign: 'middle',
+              width: direction === 'horizontal' ? 624 : '100%',
+              aspectRatio: direction === 'horizontal' ? '16 / 9' : '4 / 3',
+              height: direction === 'horizontal' ? 'auto' : 200,
+              objectFit: 'cover',
+              borderRadius: '16px',
+              backgroundColor: '#374151'
+            }}
+            active
+          />
+        }
+      >
+        <div
+          style={{
+            width: '100%',
+            display: 'flex',
+            flexDirection: 'column',
+            gap: 12
+          }}
+        >
+          <Skeleton.Input
+            style={{ width: 80, height: 24, borderRadius: 4, backgroundColor: '#1f2937' }}
+            active
+            size='small'
+          />
+          <Skeleton.Input style={{ width: '100%', height: 24, borderRadius: 4, backgroundColor: '#1f2937' }} active />
+          <Skeleton.Input style={{ width: '100%', height: 48, borderRadius: 4, backgroundColor: '#1f2937' }} active />
+          <Flex align='center' gap={12}>
+            <Skeleton.Avatar size={42} active shape='circle' style={{ backgroundColor: '#1f2937' }} />
+            <Skeleton.Input
+              style={{ width: 80, height: 20, borderRadius: 4, backgroundColor: '#1f2937' }}
+              active
+              size='small'
+            />
+          </Flex>
+        </div>
+      </Card>
+    )
 
   return (
     <Card

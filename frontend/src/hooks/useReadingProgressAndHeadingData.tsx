@@ -4,6 +4,7 @@ import { stringSlug } from '~/utils/stringSlug'
 
 interface ElementProps {
   element: string
+  enabled: boolean
 }
 
 interface Heading {
@@ -13,11 +14,12 @@ interface Heading {
   paddingLeft: number
 }
 
-export function useReadingProgressAndHeadingData({ element }: ElementProps) {
+export function useReadingProgressAndHeadingData({ element, enabled = true }: ElementProps) {
   const [progress, setProgress] = useState<number>(0)
   const [headings, setHeadings] = useState<Heading[]>([])
 
   useLayoutEffect(() => {
+    if (!enabled) return
     const elementContent = document.getElementById(element)
     if (!elementContent) return
 
@@ -62,7 +64,7 @@ export function useReadingProgressAndHeadingData({ element }: ElementProps) {
       window.removeEventListener('scroll', handleScroll)
       observer.disconnect()
     }
-  }, [element])
+  }, [element, enabled])
 
   return { progress, headings }
 }

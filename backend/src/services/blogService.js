@@ -94,7 +94,10 @@ const blogService = {
   },
   getBlogBySlug: async (slugBlog, userId) => {
     try {
-      const blog = await Blog.findOne({ slug: slugBlog }).populate("author", "username displayName avatarUrl").lean();
+      const blog = await Blog.findOne({ slug: slugBlog })
+        .populate("author", "username displayName avatarUrl")
+        .populate("category", "title slug")
+        .lean();
       if (!blog) return null;
 
       const [isLiked, likesCount, isSaved] = await Promise.all([

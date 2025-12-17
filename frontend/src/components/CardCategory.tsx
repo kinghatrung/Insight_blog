@@ -1,4 +1,4 @@
-import { Card, Flex, Typography, Divider } from 'antd'
+import { Card, Flex, Typography, Divider, Skeleton } from 'antd'
 import { RightOutlined, FireOutlined } from '@ant-design/icons'
 import { Link } from 'react-router-dom'
 
@@ -30,9 +30,84 @@ const LINK_STYLE = {
 
 interface CardCategoryProps {
   category: CategoryType
+  loading?: boolean
 }
 
-function CardCategory({ category }: CardCategoryProps) {
+function CardCategory({ category, loading }: CardCategoryProps) {
+  if (loading) {
+    return (
+      <Card className='modern-category-card zoom-on-hover' style={CARD_STYLE}>
+        <div style={{ display: 'flex', flexDirection: 'column' }}>
+          <Skeleton.Avatar active size={48} shape='circle' style={{ marginBottom: 16, backgroundColor: '#1f2937' }} />
+          <Skeleton.Input
+            active
+            size='small'
+            style={{
+              width: '60%',
+              height: 32,
+              borderRadius: 4,
+              marginBottom: 8,
+              backgroundColor: '#1f2937'
+            }}
+          />
+          <Skeleton.Input
+            active
+            size='small'
+            style={{
+              width: '100%',
+              height: 24,
+              borderRadius: 4,
+              marginBottom: 8,
+              backgroundColor: '#1f2937'
+            }}
+          />
+          <Skeleton.Input
+            active
+            size='small'
+            style={{
+              width: '100%',
+              height: 24,
+              borderRadius: 4,
+              marginBottom: 8,
+              backgroundColor: '#1f2937'
+            }}
+          />
+          <Skeleton.Input
+            active
+            size='small'
+            style={{
+              width: '100%',
+              height: 24,
+              borderRadius: 4,
+              marginBottom: 8,
+              backgroundColor: '#1f2937'
+            }}
+          />
+          <Skeleton.Input
+            active
+            size='small'
+            style={{
+              width: '100%',
+              height: 24,
+              borderRadius: 4,
+              marginBottom: 24,
+              backgroundColor: '#1f2937'
+            }}
+          />
+          <Divider style={{ backgroundColor: DIVIDER_COLOR, margin: '16px 0' }} />
+          <Flex justify='space-between' align='center'>
+            <Skeleton.Input
+              active
+              size='small'
+              style={{ width: 80, height: 20, borderRadius: 4, backgroundColor: '#1f2937' }}
+            />
+            <RightOutlined className='card-arrow' style={{ color: TEXT_COLOR, opacity: 0.8 }} />
+          </Flex>
+        </div>
+      </Card>
+    )
+  }
+
   return (
     <Card className='modern-category-card zoom-on-hover' style={CARD_STYLE}>
       <Link to={`/category/${category.slug}`} style={LINK_STYLE}>

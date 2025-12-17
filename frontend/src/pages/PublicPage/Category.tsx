@@ -11,10 +11,12 @@ function Category() {
   const PAGE_TEXT_COLOR = '#f8fafc'
   const PAGE_DIVIDER_COLOR = 'rgba(255, 255, 255, 0.1)'
 
-  const { data: categories } = useQuery({
+  const { data: categories, isLoading } = useQuery({
     queryKey: ['categories'],
     queryFn: () => categoryService.getCategoriesActive()
   })
+
+  const categoriesData = isLoading ? Array(6).fill(null) : categories
 
   return (
     <div>
@@ -47,9 +49,9 @@ function Category() {
       </div>
 
       <Row gutter={[40, 40]}>
-        {categories?.map((category: CategoryType) => (
-          <Col key={category._id} xs={24} sm={12} md={12} lg={8} style={{ display: 'flex' }}>
-            <CardCategory category={category} />
+        {categoriesData?.map((category: CategoryType, index: number) => (
+          <Col key={category?._id || `skeleton-${index}`} xs={24} sm={12} md={12} lg={8} style={{ display: 'flex' }}>
+            <CardCategory category={category} loading={isLoading} />
           </Col>
         ))}
       </Row>

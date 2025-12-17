@@ -159,6 +159,7 @@ h6 {
 
 .ant-card-body {
   padding: 16px !important;
+  width: 100%;
 }
 
 .ant-modal-title {
