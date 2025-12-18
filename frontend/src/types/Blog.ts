@@ -14,6 +14,7 @@ export interface Blog {
   category: CategoryType
   thumbnail: string
   slug: string
+  viewCount: number
   status: string
   likesCount: number
   isLiked: boolean
@@ -33,8 +34,8 @@ export interface BlogFromValues {
 }
 
 export interface GetBlogsParams {
-  page: number
-  pageSize: number
+  page?: number
+  pageSize?: number
   title?: string
   category?: string
   status?: string

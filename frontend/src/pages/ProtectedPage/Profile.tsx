@@ -357,7 +357,7 @@ function Profile() {
           )}
         </Flex>
       </Flex>
-      <Tabs defaultActiveKey='1' items={items} />
+      <Tabs className='profile' defaultActiveKey='1' items={items} />
     </div>
   )
 }

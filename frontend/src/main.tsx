@@ -1,4 +1,3 @@
-import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import { Provider } from 'react-redux'
 import { PersistGate } from 'redux-persist/integration/react'
@@ -38,15 +37,13 @@ const config: ThemeConfig = {
 }
 
 createRoot(document.getElementById('root')!).render(
-  <StrictMode>
-    <ConfigProvider theme={config} locale={viVN}>
-      <QueryClientProvider client={queryClient}>
-        <Provider store={store}>
-          <PersistGate persistor={persistor}>
-            <App />
-          </PersistGate>
-        </Provider>
-      </QueryClientProvider>
-    </ConfigProvider>
-  </StrictMode>
+  <ConfigProvider theme={config} locale={viVN}>
+    <QueryClientProvider client={queryClient}>
+      <Provider store={store}>
+        <PersistGate persistor={persistor}>
+          <App />
+        </PersistGate>
+      </Provider>
+    </QueryClientProvider>
+  </ConfigProvider>
 )

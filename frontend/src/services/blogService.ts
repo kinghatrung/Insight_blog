@@ -2,15 +2,28 @@ import authorizedAxiosInstance from '~/utils/authorizedAxios'
 import type { GetBlogsParams } from '~/types/Blog'
 
 export const blogService = {
-  getBlogs: async (params: GetBlogsParams) => {
+  getBlogs: async (params?: GetBlogsParams) => {
     const res = await authorizedAxiosInstance.get('/blogs', {
       params
     })
     return res.data
   },
+  getBlogsStats: async () => {
+    const res = await authorizedAxiosInstance.get('/blogs/stats')
+    return res.data
+  },
+  trackView: async (blogId: string) => {
+    const res = await authorizedAxiosInstance.post(`/blog-views/${blogId}/view`)
+    return res.data
+  },
+
+  getViewsStats: async () => {
+    const res = await authorizedAxiosInstance.get('/blog-views/stats')
+    return res.data.stats
+  },
   getBlogsActive: async (search?: string) => {
     const res = await authorizedAxiosInstance.get('/blogs/active', { params: { search } })
-    return res.data
+    return res.data.blogsActive
   },
   getBlogsActiveForAuthor: async (idUser?: string) => {
     const res = await authorizedAxiosInstance.get(`/blogs/active/${idUser}`)

@@ -8,7 +8,7 @@ import { slugify } from "../utils/slugify.js";
 import { parseDDMMYYYY } from "../utils/parseDDMMYYYY.js";
 
 const blogService = {
-  getBlogs: async (page = 1, pageSize = 5, filters = {}) => {
+  getBlogs: async (page = null, pageSize = null, filters = {}) => {
     try {
       const { title, status, startTime, endTime, author, description, category } = filters;
       const query = {};
@@ -45,20 +45,103 @@ const blogService = {
         query.author = { $in: userIds };
       }
 
-      const skip = (page - 1) * pageSize;
       const total = await Blog.countDocuments(query);
-      const blogs = await Blog.find(query)
+      let blogQuery = Blog.find(query)
         .populate("author", "username displayName")
         .populate("category", "title slug")
-        .sort({ createdAt: -1 })
-        .skip(skip)
-        .limit(pageSize)
-        .lean();
+        .sort({ createdAt: -1 });
+
+      if (page && pageSize) {
+        const skip = (page - 1) * pageSize;
+        blogQuery = blogQuery.skip(skip).limit(pageSize);
+      }
+
+      const blogs = await blogQuery.lean();
 
       return {
         data: blogs,
         total,
       };
+    } catch (error) {
+      throw error;
+    }
+  },
+  getBlogsStats: async () => {
+    try {
+      const now = new Date();
+
+      // Tính toán ngày bắt đầu tháng hiện tại và tháng trước
+      const startOfCurrentMonth = new Date(now.getFullYear(), now.getMonth(), 1);
+      const startOfLastMonth = new Date(now.getFullYear(), now.getMonth() - 1, 1);
+      const endOfLastMonth = new Date(now.getFullYear(), now.getMonth(), 0, 23, 59, 59, 999);
+
+      // Tính toán ngày hôm nay
+      const startOfToday = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+      const endOfToday = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 23, 59, 59, 999);
+
+      // 1. Tổng blogs hiện tại
+      const total = await Blog.countDocuments();
+
+      // 2. Tổng blogs tháng trước
+      const totalLastMonth = await Blog.countDocuments({
+        createdAt: { $gte: startOfLastMonth, $lte: endOfLastMonth },
+      });
+
+      // 3. Tổng blogs tháng này
+      const totalCurrentMonth = await Blog.countDocuments({
+        createdAt: { $gte: startOfCurrentMonth },
+      });
+
+      // 4. Blogs đăng hôm nay
+      const todayCount = await Blog.countDocuments({
+        createdAt: { $gte: startOfToday, $lte: endOfToday },
+      });
+
+      // 5. Tính % tăng/giảm so với tháng trước
+      let growthPercent = 0;
+      let isIncrease = true;
+
+      if (totalLastMonth > 0) {
+        const diff = totalCurrentMonth - totalLastMonth;
+        growthPercent = parseFloat(((diff / totalLastMonth) * 100).toFixed(1));
+        isIncrease = diff >= 0;
+      } else if (totalCurrentMonth > 0) {
+        growthPercent = 100.0;
+        isIncrease = true;
+      }
+
+      // 6. Thống kê theo status
+      const statusStats = await Blog.aggregate([
+        {
+          $group: {
+            _id: "$status",
+            count: { $sum: 1 },
+          },
+        },
+      ]);
+
+      const stats = {
+        active: 0,
+        processing: 0,
+        error: 0,
+      };
+
+      statusStats.forEach((item) => {
+        if (item._id === "active") stats.active = item.count;
+        if (item._id === "processing") stats.processing = item.count;
+        if (item._id === "error") stats.error = item.count;
+      });
+
+      const result = {
+        total,
+        todayCount,
+        growthPercent,
+        isIncrease,
+        currentMonth: totalCurrentMonth,
+        lastMonth: totalLastMonth,
+        stats,
+      };
+      return result;
     } catch (error) {
       throw error;
     }

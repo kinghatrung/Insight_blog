@@ -10,8 +10,8 @@ function Home() {
     queryKey: ['blogs'],
     queryFn: () => blogService.getBlogsActive()
   })
-  const blogsData = isLoading ? Array(6).fill(null) : blogs?.blogsActive?.slice(1)
-  const firstBlog = blogs?.blogsActive?.[0]
+  const blogsData = isLoading ? Array(6).fill(null) : blogs?.slice(1)
+  const firstBlog = blogs?.[0]
 
   return (
     <Row gutter={[40, 40]}>

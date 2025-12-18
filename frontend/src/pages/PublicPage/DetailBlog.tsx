@@ -1,3 +1,4 @@
+import { useEffect } from 'react'
 import { Badge, Row, Col, Flex, Typography, Avatar, Button, Space, message, Image, Skeleton, Spin } from 'antd'
 import dayjs from 'dayjs'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -28,18 +29,33 @@ function DetailBlog() {
     queryFn: () => blogService.getBlogBySlug(slug!),
     enabled: !!slug
   })
-  const { data: blogs, isLoading } = useQuery({
+  const { data: blogsData, isLoading } = useQuery({
     queryKey: ['blogs'],
     queryFn: () => blogService.getBlogsActive()
   })
   const blogData = blog?.blog
-  const blogsData = blogs?.blogsActive
   const newBlogs = isLoading ? Array(3).fill(null) : blogsData?.filter((blog: Blog) => blog.slug !== slug).slice(0, 3)
 
   const { headings, progress } = useReadingProgressAndHeadingData({
     element: 'blog-content',
     enabled: !loadingBlog && !!blogData?.content
   })
+
+  useEffect(() => {
+    let isCancelled = false
+    const trackView = async () => {
+      if (isCancelled) return
+      try {
+        await blogService.trackView(blog?._id)
+      } catch (error) {
+        console.error('Error tracking view:', error)
+      }
+    }
+    if (blog?._id) trackView()
+    return () => {
+      isCancelled = true
+    }
+  }, [blog?._id])
 
   const likeMutation = useMutation({
     mutationFn: (blogId: string) => blogService.likeBlog(blogId),

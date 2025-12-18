@@ -7,6 +7,7 @@ const blogSchema = new mongoose.Schema(
     description: { type: String, required: true },
     content: { type: String, required: true },
     thumbnail: { type: String },
+    viewCount: { type: Number, default: 0 },
     status: {
       type: String,
       enum: ["error", "active", "processing"],

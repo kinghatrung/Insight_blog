@@ -5,6 +5,7 @@ import authMiddleware from "../middlewares/authMiddleware.js";
 const router = Router();
 
 router.get("/", blogController.getBlogs);
+router.get("/stats", blogController.getBlogsStats);
 router.get("/active", blogController.getBlogsActive);
 router.get("/active/:id", blogController.getBlogsActiveForAuthor);
 router.get("/:slug", authMiddleware.optionalAuth, blogController.getBlogBySlug);

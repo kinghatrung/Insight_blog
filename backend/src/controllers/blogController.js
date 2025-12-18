@@ -3,8 +3,8 @@ import blogService from "../services/blogService.js";
 const blogController = {
   getBlogs: async (req, res) => {
     try {
-      const page = parseInt(req.query.page) || 1;
-      const pageSize = parseInt(req.query.pageSize) || 5;
+      const page = parseInt(req.query.page);
+      const pageSize = parseInt(req.query.pageSize);
 
       const filters = {
         title: req.query.title || "",
@@ -18,6 +18,14 @@ const blogController = {
 
       const blogs = await blogService.getBlogs(page, pageSize, filters);
 
+      res.status(200).json(blogs);
+    } catch (error) {
+      res.status(500).json({ message: error.message });
+    }
+  },
+  getBlogsStats: async (req, res) => {
+    try {
+      const blogs = await blogService.getBlogsStats();
       res.status(200).json(blogs);
     } catch (error) {
       res.status(500).json({ message: error.message });

@@ -10,6 +10,7 @@ import userRouter from "./routes/userRouter.js";
 import blogRouter from "./routes/blogRouter.js";
 import uploadRouter from "./routes/uploadRouter.js";
 import categoryRouter from "./routes/categoryRouter.js";
+import blogViewsRouter from "./routes/blogViewsRouter.js";
 
 dotenv.config();
 
@@ -25,17 +26,18 @@ app.use(
   })
 );
 
-const delayMiddleware =
-  (ms = 2000) =>
-  (req, res, next) => {
-    setTimeout(next, ms);
-  };
-app.use(delayMiddleware(0));
+// const delayMiddleware =
+//   (ms = 2000) =>
+//   (req, res, next) => {
+//     setTimeout(next, ms);
+//   };
+// app.use(delayMiddleware(100000));
 
 // Routes
 app.use("/api/auth", authRouter);
 app.use("/api/categories", categoryRouter);
 app.use("/api/blogs", blogRouter);
+app.use("/api/blog-views", blogViewsRouter);
 
 app.use(authMiddleware.isAuthorized);
 app.use("/api/users", userRouter);

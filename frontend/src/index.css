@@ -103,6 +103,22 @@ h6 {
   transform: translateY(0);
 }
 
+.top-blog-item {
+  display: flex;
+  align-items: center;
+  margin-bottom: 16px;
+  font-size: 14px;
+  padding: 8px 12px;
+  border-radius: 8px;
+  color: inherit;
+  transition: all 0.25s ease;
+}
+
+.top-blog-item:hover {
+  background: #f5f7fa;
+  transform: translateX(4px);
+}
+
 /* Input */
 .dark-input .ant-input {
   color: #f8fafc !important;
@@ -172,16 +188,16 @@ h6 {
 }
 
 /* Tab ant design */
-.ant-tabs-nav::before {
+.profile .ant-tabs-nav::before {
   border-bottom: none !important;
 }
 
-.ant-tabs-tab {
+.profile .ant-tabs-tab {
   position: relative;
   color: rgba(248, 250, 252, 0.5);
 }
 
-.ant-tabs-tab:not(.ant-tabs-tab-active):hover::after {
+.profile .ant-tabs-tab:not(.ant-tabs-tab-active):hover::after {
   content: '';
   position: absolute;
   width: 100%;
@@ -190,10 +206,19 @@ h6 {
   background-color: #f8fafc;
 }
 
-.ant-tabs-tab-active {
+.profile .ant-tabs-tab-active {
   color: #f8fafc !important;
 }
 
-.ant-tabs-tab-active * {
+.profile .ant-tabs-tab-active * {
   color: #f8fafc !important;
+}
+
+.ant-pro-statistic-card-footer {
+  margin-block-start: 0;
+  padding-block-start: 0;
+}
+
+.statistic-card .ant-card-body {
+  padding: 0px 16px 16px !important;
 }

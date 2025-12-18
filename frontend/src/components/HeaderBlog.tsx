@@ -25,12 +25,10 @@ function HeaderBlog() {
   const [search, setSearch] = useState('')
 
   const searchDebounce = useSearchDebounce(search)
-  const { data } = useQuery({
+  const { data: blogs } = useQuery({
     queryKey: ['blogs', searchDebounce],
     queryFn: () => blogService.getBlogsActive(searchDebounce)
   })
-
-  const blogs = data?.blogsActive
 
   const handleLogout = async () => {
     await dispatch(logoutUser()).unwrap()
