@@ -78,7 +78,14 @@ function ModalFormBlog({ isModalOpen, setIsModalOpen, actionRef }: ModalFormBlog
   }
 
   return (
-    <Modal title='Tạo mới Blog' open={isModalOpen} footer={null} onCancel={() => setIsModalOpen(false)} width={1200}>
+    <Modal
+      destroyOnHidden
+      title='Tạo mới Blog'
+      open={isModalOpen}
+      footer={null}
+      onCancel={() => setIsModalOpen(false)}
+      width={1200}
+    >
       <ProForm
         formRef={formRef}
         initialValues={{ content: '' }}

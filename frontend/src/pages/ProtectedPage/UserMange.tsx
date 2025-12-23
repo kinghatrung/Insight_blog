@@ -30,7 +30,6 @@ function UserMange() {
   const actionRef = useRef<ActionType | null>(null)
 
   const [isModalOpen, setIsModalOpen] = useState(false)
-  // const [openUploadImageId, setOpenUploadImageId] = useState<string | null>(null)
   const [editingUser, setEditingUser] = useState<User | null>(null)
 
   const handleCreateUser = async (values: UserFromValues) => {
@@ -278,6 +277,7 @@ function UserMange() {
       <Modal
         title='Tạo mới người dùng'
         open={isModalOpen}
+        destroyOnHidden
         footer={null}
         onCancel={() => setIsModalOpen(false)}
         width={1000}

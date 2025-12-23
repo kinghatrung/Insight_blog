@@ -20,91 +20,157 @@ function DetailCategory() {
   const blogs = isLoading ? Array(6).fill(null) : category?.blogs
 
   return (
-    <section>
-      <Flex gap={32}>
-        {isLoading ? (
-          <Flex vertical flex={1}>
-            <Skeleton.Input
-              active
-              size='small'
+    <section style={{ padding: '0 16px' }}>
+      <Row gutter={[24, 32]} align='middle'>
+        <Col xs={24} lg={12} order={2} style={{ order: 2 }}>
+          {isLoading ? (
+            <Flex vertical flex={1}>
+              <Skeleton.Input
+                active
+                size='small'
+                style={{
+                  width: 80,
+                  height: 24,
+                  borderRadius: 4,
+                  marginBottom: 8,
+                  backgroundColor: '#1f2937'
+                }}
+              />
+              <Skeleton.Input
+                active
+                size='large'
+                style={{
+                  width: '100%',
+                  maxWidth: 200,
+                  height: 48,
+                  borderRadius: 4,
+                  marginBottom: 8,
+                  backgroundColor: '#1f2937'
+                }}
+              />
+              <Skeleton.Input
+                active
+                block
+                size='large'
+                style={{ width: '100%', height: 20, borderRadius: 4, marginBottom: 8, backgroundColor: '#1f2937' }}
+              />
+              <Skeleton.Input
+                active
+                block
+                size='large'
+                style={{ width: '100%', height: 20, borderRadius: 4, marginBottom: 8, backgroundColor: '#1f2937' }}
+              />
+              <Skeleton.Input
+                active
+                block
+                size='large'
+                style={{ width: '100%', height: 20, borderRadius: 4, marginBottom: 8, backgroundColor: '#1f2937' }}
+              />
+              <Skeleton.Input
+                active
+                block
+                size='large'
+                style={{ width: '60%', height: 20, borderRadius: 4, marginBottom: 8, backgroundColor: '#1f2937' }}
+              />
+            </Flex>
+          ) : (
+            <Flex vertical flex={1}>
+              <Paragraph
+                style={{
+                  margin: 0,
+                  color: '#94a3b8',
+                  fontSize: 'clamp(14px, 1.8vw, 18px)'
+                }}
+              >
+                Chủ đề
+              </Paragraph>
+              <Title
+                style={{
+                  color: '#f8fafc',
+                  margin: 0,
+                  fontSize: 'clamp(28px, 5vw, 48px)',
+                  marginTop: 8,
+                  marginBottom: 16
+                }}
+              >
+                {category?.title}
+              </Title>
+              <Paragraph
+                style={{
+                  margin: 0,
+                  color: '#f8fafc',
+                  fontSize: 'clamp(14px, 1.5vw, 16px)',
+                  textAlign: 'justify',
+                  lineHeight: 1.8
+                }}
+              >
+                {category?.description}
+              </Paragraph>
+            </Flex>
+          )}
+        </Col>
+
+        <Col xs={24} lg={12} order={1} style={{ order: 1 }}>
+          <div
+            style={{
+              width: '100%',
+              maxWidth: '100%',
+              margin: '0 auto'
+            }}
+          >
+            <img
               style={{
-                width: 80,
-                height: 24,
-                borderRadius: 4,
-                marginBottom: 8,
-                backgroundColor: '#1f2937'
+                width: '100%',
+                height: 'auto',
+                maxHeight: 'clamp(250px, 40vw, 400px)',
+                borderRadius: 18,
+                objectFit: 'cover',
+                display: 'block'
               }}
+              src='/images/anhnen1.jpg'
+              alt='Category banner'
             />
-            <Skeleton.Input
-              active
-              size='large'
-              style={{
-                width: 80,
-                height: 48,
-                borderRadius: 4,
-                marginBottom: 8,
-                backgroundColor: '#1f2937'
-              }}
-            />
-            <Skeleton.Input
-              active
-              block
-              size='large'
-              style={{ width: '100%', height: 20, borderRadius: 4, marginBottom: 8, backgroundColor: '#1f2937' }}
-            />
-            <Skeleton.Input
-              active
-              block
-              size='large'
-              style={{ width: '100%', height: 20, borderRadius: 4, marginBottom: 8, backgroundColor: '#1f2937' }}
-            />
-            <Skeleton.Input
-              active
-              block
-              size='large'
-              style={{ width: '100%', height: 20, borderRadius: 4, marginBottom: 8, backgroundColor: '#1f2937' }}
-            />
-            <Skeleton.Input
-              active
-              block
-              size='large'
-              style={{ width: '60%', height: 20, borderRadius: 4, marginBottom: 8, backgroundColor: '#1f2937' }}
-            />
-          </Flex>
-        ) : (
-          <Flex vertical flex={1}>
-            <Paragraph style={{ margin: 0, color: '#94a3b8', fontSize: 18 }}>Chủ đề</Paragraph>
-            <Title style={{ color: '#f8fafc', margin: 0, fontSize: 48 }}>{category?.title}</Title>
-            <Paragraph style={{ margin: 0, color: '#f8fafc', fontSize: 16, textAlign: 'justify', marginRight: 32 }}>
-              {category?.description}
-            </Paragraph>
-          </Flex>
-        )}
-        <div style={{ width: '100%', maxWidth: 600, flexShrink: 0 }}>
-          <img
-            style={{ width: '100%', height: 'auto', borderRadius: 18, objectFit: 'cover' }}
-            src='/images/anhnen1.jpg'
-          />
-        </div>
-      </Flex>
-      <Divider style={{ color: '#f8fafc', borderColor: 'hsl(217.2 32.6% 17.5%)', marginBlock: 48 }}>
+          </div>
+        </Col>
+      </Row>
+
+      <Divider
+        style={{
+          color: '#f8fafc',
+          borderColor: 'hsl(217.2 32.6% 17.5%)',
+          marginBlock: 'clamp(32px, 5vw, 48px)'
+        }}
+      >
         <p
           style={{
-            fontSize: 18,
+            fontSize: 'clamp(14px, 1.8vw, 18px)',
             fontWeight: 600,
-            paddingBlock: 6,
-            paddingInline: 16,
+            paddingBlock: 'clamp(4px, 0.8vw, 6px)',
+            paddingInline: 'clamp(12px, 1.5vw, 16px)',
             borderRadius: 8,
-            backgroundColor: 'rgb(15 23 42 / 1)'
+            backgroundColor: 'rgb(15 23 42 / 1)',
+            whiteSpace: 'nowrap',
+            overflow: 'hidden',
+            textOverflow: 'ellipsis'
           }}
         >
           Các bài viết trong chủ đề này
         </p>
       </Divider>
-      <Row gutter={[40, 40]}>
+
+      <Row gutter={[24, 24]}>
         {blogs?.length === 0 ? (
           <Col span={24}>
-            <Title level={4} style={{ color: '#f8fafc', marginBottom: 0, marginTop: 32, textAlign: 'center' }}>
+            <Title
+              level={4}
+              style={{
+                color: '#f8fafc',
+                marginBottom: 0,
+                marginTop: 32,
+                textAlign: 'center',
+                fontSize: 'clamp(16px, 2vw, 20px)'
+              }}
+            >
               Không có bài viết nào...
             </Title>
           </Col>

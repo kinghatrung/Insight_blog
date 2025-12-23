@@ -103,7 +103,7 @@ function DetailBlog() {
   }
 
   return (
-    <section>
+    <section style={{ padding: '0 16px' }}>
       <Flex vertical style={{ marginBottom: 48 }}>
         {loadingBlog ? (
           <Skeleton.Image
@@ -111,7 +111,7 @@ function DetailBlog() {
             style={{
               display: 'block',
               width: '100%',
-              height: 550,
+              height: 'clamp(250px, 50vw, 550px)',
               maxWidth: 1024,
               margin: '24px auto',
               borderRadius: '12px',
@@ -126,6 +126,7 @@ function DetailBlog() {
               display: 'block',
               width: '100%',
               maxWidth: 1024,
+              height: 'auto',
               maxHeight: 550,
               margin: '24px auto',
               borderRadius: 12,
@@ -163,11 +164,20 @@ function DetailBlog() {
               />
             </>
           ) : (
-            <Title level={2} style={{ fontWeight: 600, color: '#f8fafc' }}>
+            <Title
+              level={2}
+              style={{
+                fontWeight: 600,
+                color: '#f8fafc',
+                fontSize: 'clamp(20px, 4vw, 32px)',
+                textAlign: 'center',
+                padding: '0 16px'
+              }}
+            >
               {blogData?.title}
             </Title>
           )}
-          <Flex align='center' gap={18}>
+          <Flex align='center' gap={18} wrap='wrap' justify='center'>
             {loadingBlog ? (
               <>
                 <Skeleton.Avatar active size={52} shape='circle' style={{ backgroundColor: '#1f2937' }} />
@@ -184,7 +194,15 @@ function DetailBlog() {
             ) : (
               <>
                 <Avatar size={52} icon={<UserOutlined />} src={blogData?.author.avatarUrl} />
-                <Paragraph style={{ fontWeight: 700, opacity: '.75', color: '#f8fafc', margin: 0, fontSize: 18 }}>
+                <Paragraph
+                  style={{
+                    fontWeight: 700,
+                    opacity: '.75',
+                    color: '#f8fafc',
+                    margin: 0,
+                    fontSize: 'clamp(14px, 2vw, 18px)'
+                  }}
+                >
                   <CalendarOutlined /> {dayjs(blogData?.createdAt).format('DD/MM/YYYY')}
                 </Paragraph>
               </>
@@ -208,171 +226,29 @@ function DetailBlog() {
           </Link>
         </Flex>
       </Flex>
-      <Flex>
-        <Flex style={{ flex: 3 }} vertical>
-          {loadingBlog ? (
-            <Spin
-              style={{
-                display: 'flex',
-                justifyContent: 'center',
-                paddingBlock: 400
-              }}
-              indicator={<LoadingOutlined style={{ fontSize: 100 }} spin />}
-            />
-          ) : (
-            <div
-              style={{
-                padding: '32px 24px',
-                color: '#f8fafc',
-                textAlign: 'justify',
-                fontSize: '18px',
-                lineHeight: '2'
-              }}
-            >
-              <Paragraph style={{ color: '#f8fafc', fontSize: 18, marginBottom: 20, lineHeight: '2' }}>
-                {blogData?.description}
-              </Paragraph>
-              <div id='blog-content' dangerouslySetInnerHTML={{ __html: blogData?.content }} />
-            </div>
-          )}
-          <Flex justify='space-between' style={{ padding: '12px 24px', paddingBottom: 12 }}>
-            <Flex align='center' gap={8}>
-              <Paragraph style={{ fontWeight: 700, color: '#f8fafc', fontSize: 16, margin: 0 }}>Chia sẻ lên</Paragraph>
-              <Button type='primary' shape='circle' icon={<FontAwesomeIcon icon={faFacebook} size='lg' />} />
-              <Button
-                style={{ background: 'linear-gradient(45deg, #833AB4, #E4405F, #FCAF45)', color: '#f8fafc' }}
-                type='primary'
-                shape='circle'
-                icon={<FontAwesomeIcon icon={faInstagram} size='lg' />}
-              />
-            </Flex>
-            <Space align='center' size={12}>
-              <Button
-                onClick={handleToggleSave}
-                disabled={saveMutation.isPending || unsaveMutation.isPending}
-                shape='circle'
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  transition: 'all 0.2s ease',
-                  backgroundColor: blogData?.isSaved ? '#2563EB' : '#93C5FD',
-                  border: 'none',
-                  color: '#f8fafc',
-                  textAlign: 'center'
-                }}
-                icon={
-                  <FontAwesomeIcon
-                    icon={faBookmark}
-                    style={{ fontSize: 16, color: blogData?.isSaved ? '#ffffff' : '#7f1d1d' }}
-                  />
-                }
-              />
-              <Space align='center' size={6}>
-                <Button
-                  onClick={handleToggleLike}
-                  disabled={likeMutation.isPending || unlikeMutation.isPending}
-                  shape='circle'
-                  style={{
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    transition: 'all 0.2s ease',
-                    backgroundColor: blogData?.isLiked ? '#EF4444' : '#FCA5A5',
-                    display: 'flex',
-                    border: 'none',
-                    color: '#f8fafc',
-                    textAlign: 'center'
-                  }}
-                  icon={
-                    <FontAwesomeIcon
-                      icon={faHeart}
-                      style={{ fontSize: 16, color: blogData?.isLiked ? '#ffffff' : '#7f1d1d' }}
-                    />
-                  }
-                />
-                <span
-                  style={{
-                    fontSize: 16,
-                    fontWeight: 500,
-                    color: '#f8fafc',
-                    minWidth: 20,
-                    textAlign: 'center',
-                    paddingInline: 8
-                  }}
-                >
-                  {loadingBlog ? <Spin indicator={<LoadingOutlined spin />} /> : blogData?.likesCount}
-                </span>
-              </Space>
-            </Space>
-          </Flex>
-          <div style={{ padding: '40px 24px' }}>
-            <Paragraph style={{ fontWeight: 700, color: '#f8fafc', fontSize: 16, marginBottom: 20 }}>
-              Tác giả bài viết
-            </Paragraph>
 
-            {loadingBlog ? (
-              <Flex gap={16}>
-                <Skeleton.Avatar
-                  shape='square'
-                  active
-                  style={{ borderRadius: 8, width: 90, height: 90, backgroundColor: '#1f2937' }}
-                />
-                <Flex vertical gap={4}>
-                  <Skeleton.Input
-                    active
-                    size='small'
-                    style={{
-                      width: '60%',
-                      height: 18,
-                      borderRadius: 4,
-                      marginBottom: 8,
-                      backgroundColor: '#1f2937'
-                    }}
-                  />
-                  <Skeleton.Input
-                    active
-                    size='small'
-                    style={{
-                      width: '100%',
-                      height: 18,
-                      borderRadius: 4,
-                      marginBottom: 8,
-                      backgroundColor: '#1f2937'
-                    }}
-                  />
-                </Flex>
-              </Flex>
-            ) : (
-              <Flex gap={16}>
-                <Image
-                  style={{ width: 90, height: 90, objectFit: 'cover' }}
-                  alt='Tác giả'
-                  src={blogData?.author?.avatarUrl}
-                />
-                <Flex vertical gap={4}>
-                  <Title level={5} style={{ fontWeight: 500, color: '#f8fafc', margin: 0 }}>
-                    {blogData?.author.displayName}
-                  </Title>
-                  <Paragraph style={{ fontWeight: 500, color: '#6b7280', fontSize: 14, margin: 0 }}>
-                    Web Developer
-                  </Paragraph>
-                </Flex>
-              </Flex>
-            )}
-          </div>
-        </Flex>
-        <div style={{ position: 'relative', color: '#f8fafc', flex: 1, flexDirection: 'column' }}>
+      <Row gutter={[24, 24]}>
+        <Col xs={24} lg={6} style={{ order: 1 }}>
           <div
             style={{
               position: 'sticky',
               top: 118,
-              padding: '24px 24px 18px',
+              padding: 'clamp(16px, 2vw, 24px) clamp(16px, 2vw, 24px) clamp(12px, 1.5vw, 18px)',
               backgroundColor: 'hsl(222.2 84% 4.9%)',
               border: '2px solid hsl(217.2 32.6% 17.5%)',
-              borderRadius: 12
+              borderRadius: 12,
+              marginBottom: 24
             }}
           >
-            <Title level={4} style={{ fontWeight: 600, color: '#f8fafc', marginBottom: 16 }}>
+            <Title
+              level={4}
+              style={{
+                fontWeight: 600,
+                color: '#f8fafc',
+                marginBottom: 16,
+                fontSize: 'clamp(16px, 1.8vw, 20px)'
+              }}
+            >
               Mục lục
             </Title>
             {loadingBlog ? (
@@ -389,17 +265,236 @@ function DetailBlog() {
               <ProgressBar percent={progress} headings={headings} />
             )}
           </div>
-        </div>
-      </Flex>
+        </Col>
+
+        <Col xs={24} lg={18} style={{ order: 2 }}>
+          <Flex vertical>
+            {loadingBlog ? (
+              <Spin
+                style={{
+                  display: 'flex',
+                  justifyContent: 'center',
+                  paddingBlock: 400
+                }}
+                indicator={<LoadingOutlined style={{ fontSize: 100 }} spin />}
+              />
+            ) : (
+              <div
+                style={{
+                  padding: 'clamp(16px, 3vw, 32px) clamp(12px, 2vw, 24px)',
+                  color: '#f8fafc',
+                  textAlign: 'justify',
+                  fontSize: 'clamp(16px, 1.5vw, 18px)',
+                  lineHeight: '2'
+                }}
+              >
+                <Paragraph
+                  style={{
+                    color: '#f8fafc',
+                    fontSize: 'clamp(16px, 1.5vw, 18px)',
+                    marginBottom: 20,
+                    lineHeight: '2'
+                  }}
+                >
+                  {blogData?.description}
+                </Paragraph>
+                <div id='blog-content' dangerouslySetInnerHTML={{ __html: blogData?.content }} />
+              </div>
+            )}
+
+            <Flex
+              justify='space-between'
+              style={{
+                padding: '12px clamp(12px, 2vw, 24px)',
+                paddingBottom: 12,
+                flexDirection: 'row',
+                gap: 16,
+                flexWrap: 'wrap'
+              }}
+            >
+              <Flex align='center' gap={8} wrap='wrap'>
+                <Paragraph
+                  style={{
+                    fontWeight: 700,
+                    color: '#f8fafc',
+                    fontSize: 'clamp(14px, 1.5vw, 16px)',
+                    margin: 0
+                  }}
+                >
+                  Chia sẻ lên
+                </Paragraph>
+                <Button type='primary' shape='circle' icon={<FontAwesomeIcon icon={faFacebook} size='lg' />} />
+                <Button
+                  style={{ background: 'linear-gradient(45deg, #833AB4, #E4405F, #FCAF45)', color: '#f8fafc' }}
+                  type='primary'
+                  shape='circle'
+                  icon={<FontAwesomeIcon icon={faInstagram} size='lg' />}
+                />
+              </Flex>
+
+              <Space align='center' size={12}>
+                <Button
+                  onClick={handleToggleSave}
+                  disabled={saveMutation.isPending || unsaveMutation.isPending}
+                  shape='circle'
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    transition: 'all 0.2s ease',
+                    backgroundColor: blogData?.isSaved ? '#2563EB' : '#93C5FD',
+                    border: 'none',
+                    color: '#f8fafc',
+                    textAlign: 'center'
+                  }}
+                  icon={
+                    <FontAwesomeIcon
+                      icon={faBookmark}
+                      style={{ fontSize: 16, color: blogData?.isSaved ? '#ffffff' : '#7f1d1d' }}
+                    />
+                  }
+                />
+                <Space align='center' size={6}>
+                  <Button
+                    onClick={handleToggleLike}
+                    disabled={likeMutation.isPending || unlikeMutation.isPending}
+                    shape='circle'
+                    style={{
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      transition: 'all 0.2s ease',
+                      backgroundColor: blogData?.isLiked ? '#EF4444' : '#FCA5A5',
+                      display: 'flex',
+                      border: 'none',
+                      color: '#f8fafc',
+                      textAlign: 'center'
+                    }}
+                    icon={
+                      <FontAwesomeIcon
+                        icon={faHeart}
+                        style={{ fontSize: 16, color: blogData?.isLiked ? '#ffffff' : '#7f1d1d' }}
+                      />
+                    }
+                  />
+                  <span
+                    style={{
+                      fontSize: 'clamp(14px, 1.5vw, 16px)',
+                      fontWeight: 500,
+                      color: '#f8fafc',
+                      minWidth: 20,
+                      textAlign: 'center',
+                      paddingInline: 8
+                    }}
+                  >
+                    {loadingBlog ? <Spin indicator={<LoadingOutlined spin />} /> : blogData?.likesCount}
+                  </span>
+                </Space>
+              </Space>
+            </Flex>
+
+            <div style={{ padding: 'clamp(24px, 4vw, 40px) clamp(12px, 2vw, 24px)' }}>
+              <Paragraph
+                style={{
+                  fontWeight: 700,
+                  color: '#f8fafc',
+                  fontSize: 'clamp(14px, 1.5vw, 16px)',
+                  marginBottom: 20
+                }}
+              >
+                Tác giả bài viết
+              </Paragraph>
+
+              {loadingBlog ? (
+                <Flex gap={16}>
+                  <Skeleton.Avatar
+                    shape='square'
+                    active
+                    style={{ borderRadius: 8, width: 90, height: 90, backgroundColor: '#1f2937' }}
+                  />
+                  <Flex vertical gap={4}>
+                    <Skeleton.Input
+                      active
+                      size='small'
+                      style={{
+                        width: '60%',
+                        height: 18,
+                        borderRadius: 4,
+                        marginBottom: 8,
+                        backgroundColor: '#1f2937'
+                      }}
+                    />
+                    <Skeleton.Input
+                      active
+                      size='small'
+                      style={{
+                        width: '100%',
+                        height: 18,
+                        borderRadius: 4,
+                        marginBottom: 8,
+                        backgroundColor: '#1f2937'
+                      }}
+                    />
+                  </Flex>
+                </Flex>
+              ) : (
+                <Flex gap={16}>
+                  <Image
+                    style={{
+                      width: 'clamp(60px, 10vw, 90px)',
+                      height: 'clamp(60px, 10vw, 90px)',
+                      objectFit: 'cover'
+                    }}
+                    alt='Tác giả'
+                    src={blogData?.author?.avatarUrl}
+                  />
+                  <Flex vertical gap={4}>
+                    <Title
+                      level={5}
+                      style={{
+                        fontWeight: 500,
+                        color: '#f8fafc',
+                        margin: 0,
+                        fontSize: 'clamp(14px, 1.5vw, 16px)'
+                      }}
+                    >
+                      {blogData?.author.displayName}
+                    </Title>
+                    <Paragraph
+                      style={{
+                        fontWeight: 500,
+                        color: '#6b7280',
+                        fontSize: 'clamp(12px, 1.2vw, 14px)',
+                        margin: 0
+                      }}
+                    >
+                      Web Developer
+                    </Paragraph>
+                  </Flex>
+                </Flex>
+              )}
+            </div>
+          </Flex>
+        </Col>
+      </Row>
+
       {newBlogs?.length > 0 && (
-        <div style={{ marginTop: 80 }}>
+        <div style={{ marginTop: 'clamp(40px, 8vw, 80px)' }}>
           <Col span={24}>
-            <Title level={2} style={{ fontWeight: 600, color: '#f8fafc', marginBottom: 56, textAlign: 'center' }}>
+            <Title
+              level={2}
+              style={{
+                fontWeight: 600,
+                color: '#f8fafc',
+                marginBottom: 'clamp(32px, 6vw, 56px)',
+                textAlign: 'center',
+                fontSize: 'clamp(20px, 3vw, 32px)'
+              }}
+            >
               Các bài viết mới nhất
             </Title>
           </Col>
 
-          <Row gutter={[40, 40]}>
+          <Row gutter={[24, 24]}>
             {newBlogs?.map((blog: Blog, index: number) => (
               <Col key={blog?._id || `skeleton-${index}`} xs={24} sm={12} md={12} lg={8} style={{ display: 'flex' }}>
                 <CardBlog blog={blog} loading={isLoading} />

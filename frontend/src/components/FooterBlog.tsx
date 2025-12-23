@@ -49,7 +49,7 @@ function FooterBlog() {
             </a>
           </li>
         </ul>
-        <p style={{ fontSize: '16px', color: '#f8fafc', width: 600 }}>
+        <p style={{ fontSize: '16px', color: '#f8fafc' }}>
           Website blog cho phép bạn viết và chia sẻ bài viết một cách dễ dàng, với giao diện đơn giản và hiện đại.
         </p>
         <ul style={{ display: 'flex', justifyContent: 'center', listStyleType: 'none' }}>

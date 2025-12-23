@@ -16,13 +16,13 @@ const CategoryMange = lazy(() => import('~/pages/ProtectedPage/CategoryMange'))
 const UserMange = lazy(() => import('~/pages/ProtectedPage/UserMange'))
 const Profile = lazy(() => import('~/pages/ProtectedPage/Profile'))
 
-import RbacRoute from '~/core/RbacRouter'
-import ProtectedRoute from '~/components/ProtectedRoute'
+const DefaultLayout = lazy(() => import('~/layouts/DefaultLayout'))
+const ProtectedLayout = lazy(() => import('~/layouts/ProtectedLayout'))
+const RbacRoute = lazy(() => import('~/core/RbacRouter'))
+const ProtectedRoute = lazy(() => import('~/core/ProtectedRoute'))
+
 import ScrollTop from '~/components/ScrollTop'
 import Loading from '~/components/Loading'
-
-import DefaultLayout from '~/layouts/DefaultLayout'
-import ProtectedLayout from '~/layouts/ProtectedLayout'
 import { permissions } from '~/config/rbacConfig'
 
 interface WrapperProps {
@@ -52,9 +52,7 @@ function App() {
             <Route path='/detail/:slug' element={<DetailBlog />} />
             <Route path='/category/:slug' element={<DetailCategory />} />
             <Route element={<ProtectedRoute />}>
-              <Route element={<RbacRoute requiredPermission={permissions.VIEW_PROFILE} />}>
-                <Route path='/profile' element={<Profile />} />
-              </Route>
+              <Route path='/profile' element={<Profile />} />
             </Route>
           </Route>
           <Route path='/admin' element={<ProtectedRoute />}>

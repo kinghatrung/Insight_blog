@@ -73,7 +73,8 @@ function CardBlog({ blog, loading, direction = 'vertical' }: CardBlogProps) {
   return (
     <Card
       style={{
-        width: direction ? '100%' : 400,
+        minWidth: direction ? '100%' : 400,
+        width: '100%',
         background: 'transparent',
         border: 'none',
         padding: '16px',

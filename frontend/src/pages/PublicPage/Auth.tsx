@@ -123,10 +123,15 @@ const Page = () => {
           </div>
         }
       >
-        <Tabs centered activeKey={loginType} onChange={(activeKey) => setLoginType(activeKey as LoginType)}>
-          <Tabs.TabPane key={'Đăng nhập'} tab={'Đăng nhập'} />
-          <Tabs.TabPane key={'Đăng ký'} tab={'Đăng ký'} />
-        </Tabs>
+        <Tabs
+          items={[
+            { key: 'Đăng nhập', label: 'Đăng nhập' },
+            { key: 'Đăng ký', label: 'Đăng ký' }
+          ]}
+          centered
+          activeKey={loginType}
+          onChange={(activeKey) => setLoginType(activeKey as LoginType)}
+        />
         {loginType === 'Đăng nhập' && (
           <>
             <ProFormText

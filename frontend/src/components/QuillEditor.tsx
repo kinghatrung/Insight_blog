@@ -1,4 +1,4 @@
-import React, { memo } from 'react'
+import { forwardRef, memo } from 'react'
 import ReactQuill from 'react-quill'
 import 'react-quill/dist/quill.snow.css'
 
@@ -17,12 +17,14 @@ const modules = {
   ]
 }
 
-const QuillEditor: React.FC<QuillEditorProps> = ({ value, onChange }) => {
+const QuillEditor = forwardRef<ReactQuill, QuillEditorProps>(({ value, onChange }, ref) => {
   return (
-    <div className='ant-input' style={{ marginBottom: '44px' }}>
-      <ReactQuill value={value} onChange={onChange} theme='snow' modules={modules} style={{ height: 600 }} />
+    <div className='ant-input' style={{ marginBottom: 44 }}>
+      <ReactQuill ref={ref} value={value} onChange={onChange} theme='snow' modules={modules} style={{ height: 600 }} />
     </div>
   )
-}
+})
+
+QuillEditor.displayName = 'QuillEditor'
 
 export default memo(QuillEditor)

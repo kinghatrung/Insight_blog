@@ -21,15 +21,7 @@ function Category() {
   return (
     <div>
       <div style={{ marginBottom: 48 }}>
-        <Title
-          level={1}
-          style={{
-            color: PAGE_TEXT_COLOR,
-            fontWeight: 800,
-            textAlign: 'center',
-            marginBottom: 8
-          }}
-        >
+        <Title level={1} style={{ color: PAGE_TEXT_COLOR, fontWeight: 800, textAlign: 'center', marginBottom: 8 }}>
           Khám phá các thể loại Blog
         </Title>
         <Paragraph

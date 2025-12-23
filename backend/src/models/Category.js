@@ -2,16 +2,36 @@ import mongoose from "mongoose";
 
 const categorySchema = new mongoose.Schema(
   {
-    title: { type: String, required: true, unique: true },
-    slug: { type: String, required: true, unique: true },
-    description: { type: String, required: true },
+    title: {
+      type: String,
+      required: true,
+      unique: true,
+      trim: true,
+      lowercase: true,
+    },
+    slug: {
+      type: String,
+      required: true,
+      unique: true,
+      lowercase: true,
+    },
+    description: {
+      type: String,
+      required: true,
+      trim: true,
+    },
     status: {
       type: String,
       enum: ["error", "active", "processing"],
       default: "processing",
+      lowercase: true,
     },
   },
-  { timestamps: true }
+  {
+    timestamps: true,
+    toJSON: { virtuals: true },
+    toObject: { virtuals: true },
+  }
 );
 
 categorySchema.virtual("blogs", {
@@ -20,8 +40,9 @@ categorySchema.virtual("blogs", {
   foreignField: "category",
 });
 
-categorySchema.set("toJSON", { virtuals: true });
-categorySchema.set("toObject", { virtuals: true });
+// Add index for better query performance
+categorySchema.index({ status: 1 });
+// categorySchema.index({ slug: 1 });
 
 const Category = mongoose.model("Category", categorySchema);
 export default Category;

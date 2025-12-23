@@ -3,7 +3,7 @@ import blogViewService from "../services/blogViewService.js";
 
 export const startViewCountSyncJob = () => {
   // Chạy mỗi 5 phút: */5 * * * *
-  cron.schedule("*/1 * * * *", async () => {
+  cron.schedule("*/30 * * * *", async () => {
     try {
       console.log("[CRON] Starting view count sync...");
       const count = await blogViewService.syncAllViewCounts();
@@ -13,5 +13,5 @@ export const startViewCountSyncJob = () => {
     }
   });
 
-  console.log("✅ View count sync job started (every 5 minutes)");
+  console.log("✅ View count sync job started (every 30 minutes)");
 };

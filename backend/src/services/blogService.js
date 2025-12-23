@@ -5,6 +5,8 @@ import Blog from "../models/Blog.js";
 import User from "../models/User.js";
 import Like from "../models/Like.js";
 import Save from "../models/Save.js";
+import Category from "../models/Category.js";
+
 import blogViewService from "../services/blogViewService.js";
 import { slugify } from "../utils/slugify.js";
 import { parseDDMMYYYY } from "../utils/parseDDMMYYYY.js";
@@ -103,6 +105,7 @@ const blogService = {
         statusAgg,
         yearlyViewsAgg,
         registeredThisMonth,
+        categoryAgg,
       ] = await Promise.all([
         Blog.countDocuments(),
         Blog.countDocuments({ createdAt: { $gte: startOfLastMonth, $lte: endOfLastMonth } }),
@@ -114,13 +117,17 @@ const blogService = {
 
         Blog.aggregate([{ $group: { _id: null, totalViews: { $sum: "$viewCount" } } }]),
         Blog.aggregate([{ $group: { _id: "$status", count: { $sum: 1 } } }]),
-
         Blog.aggregate([
           { $match: { createdAt: { $gte: startOfYear, $lte: endOfYear } } },
           { $group: { _id: { $month: "$createdAt" }, value: { $sum: "$viewCount" } } },
         ]),
 
         User.countDocuments({ createdAt: { $gte: startOfLastMonth } }),
+
+        Category.aggregate([
+          { $lookup: { from: "blogs", localField: "_id", foreignField: "category", as: "blogs" } },
+          { $project: { _id: 0, name: "$title", count: { $size: "$blogs" } } },
+        ]),
       ]);
 
       /* ========= GROWTH ========= */
@@ -179,13 +186,13 @@ const blogService = {
         viewsChartData,
         yearlyViewsChartData,
 
+        categoriesStats: categoryAgg,
+
         totalLikes,
         todayLikes,
         likesChartData,
-
         registeredThisMonth,
         progressPercent: Math.min(100, Math.round((registeredThisMonth / TARGET) * 100)),
-
         stats,
       };
     } catch (err) {

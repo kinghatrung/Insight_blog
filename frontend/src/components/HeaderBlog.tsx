@@ -1,7 +1,7 @@
 import { useState, memo } from 'react'
-import { Layout, Button, Typography, Dropdown, Flex, Avatar, Modal, Input } from 'antd'
+import { Layout, Button, Typography, Dropdown, Flex, Avatar, Modal, Input, Grid, Drawer } from 'antd'
 import { Link, NavLink } from 'react-router-dom'
-import { SearchOutlined, LogoutOutlined, UserOutlined } from '@ant-design/icons'
+import { SearchOutlined, LogoutOutlined, UserOutlined, MenuOutlined } from '@ant-design/icons'
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import { useQuery } from '@tanstack/react-query'
@@ -14,14 +14,18 @@ import type { Blog } from '~/types/Blog'
 
 const { Title, Paragraph } = Typography
 const { Header } = Layout
+const { useBreakpoint } = Grid
 
 function HeaderBlog() {
   const dispatch = useDispatch<AppDispatch>()
   const navigate = useNavigate()
+  const screens = useBreakpoint()
+
   const { currentUser } = useSelector(authSelectors)
   const roleUser = currentUser?.role
 
   const [showModal, setShowModal] = useState<boolean>(false)
+  const [isOpenDrawer, setIsOpenDrawer] = useState<boolean>(false)
   const [search, setSearch] = useState('')
 
   const searchDebounce = useSearchDebounce(search)
@@ -46,6 +50,7 @@ function HeaderBlog() {
         width: '100%',
         height: 75,
         gap: 20,
+        paddingInline: screens.lg ? 48 : 16,
         justifyContent: 'space-between',
         backgroundImage: 'url("/images/noise.webp")',
         backgroundSize: '200px 200px',
@@ -56,95 +61,117 @@ function HeaderBlog() {
         backgroundColor: 'rgba(17, 25, 40, 0.3)'
       }}
     >
-      <div style={{ color: '#fff', fontSize: 20, fontWeight: 700, marginLeft: 32 }}>
+      <div style={{ color: '#fff', fontSize: 20, fontWeight: 700 }}>
         <Link to='/' className='nav-link'>
-          Insight Blog
+          Insight
         </Link>
       </div>
-      <div
-        style={{
-          display: 'flex',
-          gap: 20,
-          justifyContent: 'flex-end',
-          flexGrow: 1
-        }}
-      >
-        <NavLink
-          to='/'
-          className='nav-header'
-          //  className={({ isActive }) => `nav-header ${isActive ? 'nav-header-active' : ''}`}
+      {screens.lg && (
+        <div
+          style={{
+            display: 'flex',
+            gap: 20,
+            justifyContent: 'flex-end',
+            flexGrow: 1
+          }}
         >
-          <Title style={{ fontSize: '16px', color: '#f8fafc', fontWeight: 600, margin: 0 }} color='white'>
-            Trang chủ
-          </Title>
-        </NavLink>
-        <NavLink to='/category' className='nav-header'>
-          <Title style={{ fontSize: '16px', color: '#f8fafc', fontWeight: 600, margin: 0 }} color='white'>
-            Chủ đề bài viết
-          </Title>
-        </NavLink>
-        <NavLink to='/aboutme' className='nav-header'>
-          <Title style={{ fontSize: '16px', color: '#f8fafc', fontWeight: 600, margin: 0 }} color='white'>
-            Về chúng tôi
-          </Title>
-        </NavLink>
-        <Dropdown
-          className='nav-header'
-          placement='bottomRight'
-          popupRender={() => (
-            <div
-              style={{
-                backgroundColor: 'hsl(222.2 84% 4.9%)',
-                border: '1px solid hsl(217.2 32.6% 17.5%)',
-                borderRadius: 8,
-                width: 200
-              }}
-            >
-              <a
-                href='https://www.facebook.com/huyen2706'
-                className='nav-user'
-                style={{
-                  display: 'block',
-                  fontWeight: 500,
-                  width: '100%',
-                  padding: '12px 16px',
-                  color: '#f8fafc',
-                  borderRadius: 6,
-                  backgroundColor: 'transparent',
-                  borderColor: 'hsl(217.2 32.6% 17.5%)'
-                }}
-              >
-                Facebook
-              </a>
-              <a
-                href='https://www.facebook.com/huyen2706'
-                className='nav-user'
-                style={{
-                  display: 'block',
-                  fontWeight: 500,
-                  width: '100%',
-                  padding: '12px 16px',
-                  color: '#f8fafc',
-                  borderRadius: 6,
-                  backgroundColor: 'transparent',
-                  borderColor: 'hsl(217.2 32.6% 17.5%)'
-                }}
-              >
-                Github
-              </a>
-            </div>
-          )}
-        >
-          <Title
-            style={{ cursor: 'pointer', fontSize: '16px', color: '#f8fafc', fontWeight: 600, margin: 0 }}
-            color='white'
+          <NavLink
+            to='/'
+            className='nav-header'
+            //  className={({ isActive }) => `nav-header ${isActive ? 'nav-header-active' : ''}`}
           >
-            Liên hệ
-          </Title>
-        </Dropdown>
-      </div>
+            <Title style={{ fontSize: '16px', color: '#f8fafc', fontWeight: 600, margin: 0 }} color='white'>
+              Trang chủ
+            </Title>
+          </NavLink>
+          <NavLink to='/category' className='nav-header'>
+            <Title style={{ fontSize: '16px', color: '#f8fafc', fontWeight: 600, margin: 0 }} color='white'>
+              Chủ đề bài viết
+            </Title>
+          </NavLink>
+          <NavLink to='/aboutme' className='nav-header'>
+            <Title style={{ fontSize: '16px', color: '#f8fafc', fontWeight: 600, margin: 0 }} color='white'>
+              Về chúng tôi
+            </Title>
+          </NavLink>
+          <Dropdown
+            className='nav-header'
+            placement='bottomRight'
+            popupRender={() => (
+              <div
+                style={{
+                  backgroundColor: 'hsl(222.2 84% 4.9%)',
+                  border: '1px solid hsl(217.2 32.6% 17.5%)',
+                  borderRadius: 8,
+                  width: 200
+                }}
+              >
+                <a
+                  href='https://www.facebook.com/huyen2706'
+                  className='nav-user'
+                  style={{
+                    display: 'block',
+                    fontWeight: 500,
+                    width: '100%',
+                    padding: '12px 16px',
+                    color: '#f8fafc',
+                    borderRadius: 6,
+                    backgroundColor: 'transparent',
+                    borderColor: 'hsl(217.2 32.6% 17.5%)'
+                  }}
+                >
+                  Facebook
+                </a>
+                <a
+                  href='https://www.facebook.com/huyen2706'
+                  className='nav-user'
+                  style={{
+                    display: 'block',
+                    fontWeight: 500,
+                    width: '100%',
+                    padding: '12px 16px',
+                    color: '#f8fafc',
+                    borderRadius: 6,
+                    backgroundColor: 'transparent',
+                    borderColor: 'hsl(217.2 32.6% 17.5%)'
+                  }}
+                >
+                  Github
+                </a>
+              </div>
+            )}
+          >
+            <Title
+              style={{ cursor: 'pointer', fontSize: '16px', color: '#f8fafc', fontWeight: 600, margin: 0 }}
+              color='white'
+            >
+              Liên hệ
+            </Title>
+          </Dropdown>
+        </div>
+      )}
 
       <Flex gap={12} align='center'>
+        {!screens.lg && (
+          <Button
+            onClick={() => setIsOpenDrawer(!isOpenDrawer)}
+            className='nav-link'
+            type='default'
+            style={{
+              display: 'flex',
+              justifyContent: ' center',
+              alignItems: 'center',
+              width: 38,
+              height: 38,
+              textAlign: 'center',
+              backgroundColor: 'hsl(222.2 84% 4.9%)',
+              color: '#f8fafc',
+              borderColor: 'hsl(217.2 32.6% 17.5%)',
+              borderRadius: 6
+            }}
+            icon={<MenuOutlined />}
+          />
+        )}
         <Button
           onClick={() => setShowModal(!showModal)}
           className='nav-link'
@@ -163,69 +190,6 @@ function HeaderBlog() {
           }}
           icon={<SearchOutlined />}
         />
-        <Modal
-          destroyOnHidden
-          className='box-search'
-          title='Tìm kiếm'
-          width={770}
-          onCancel={() => {
-            setShowModal(!showModal)
-            setSearch('')
-          }}
-          open={showModal}
-          footer={false}
-        >
-          <p style={{ marginBottom: 12 }}>Tìm kiếm nội dung trên website:</p>
-          <Input
-            id='search'
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            style={{
-              height: 40,
-              backgroundColor: 'transparent',
-              color: '#f8fafc',
-              borderColor: 'rgb(156 163 175 / 1)'
-            }}
-            placeholder='Tiêu đề blog đang tìm...'
-          />
-          <div style={{ marginTop: 20, height: 300, width: '100%', overflowY: 'auto' }}>
-            <div style={{ display: 'flex', flexDirection: 'column', width: '100%' }}>
-              {search === '' ? (
-                <div className='text-center p-8 text-muted-foreground'>Bắt đầu nhập để xem các kết quả tìm kiếm!</div>
-              ) : blogs?.length > 0 ? (
-                blogs.map((blog: Blog) => (
-                  <Link
-                    onClick={() => {
-                      setShowModal(!showModal)
-                      setSearch('')
-                    }}
-                    to={`/detail/${blog.slug}`}
-                    key={blog._id}
-                    className='card-search'
-                    style={{ display: 'flex', padding: 16, marginBlock: 16, flexDirection: 'row', gap: 8 }}
-                  >
-                    <img
-                      src={blog.thumbnail}
-                      style={{ width: 320, height: 168, objectFit: 'cover', borderRadius: 12, flexShrink: 0 }}
-                    />
-                    <div style={{ marginLeft: 12 }}>
-                      <Title level={4} style={{ fontWeight: 600, color: '#f8fafc' }} ellipsis={{ rows: 2 }}>
-                        {blog.title}
-                      </Title>
-                      <Paragraph style={{ fontWeight: 400, color: '#f8fafc', fontSize: 16 }} ellipsis={{ rows: 2 }}>
-                        {blog.description}
-                      </Paragraph>
-                    </div>
-                  </Link>
-                ))
-              ) : (
-                <div className='text-center p-8 text-muted-foreground'>
-                  Không tìm thấy Blogs nào khớp với **"{search}"**.
-                </div>
-              )}
-            </div>
-          </div>
-        </Modal>
         <Dropdown
           placement='bottomRight'
           popupRender={() => (
@@ -335,6 +299,86 @@ function HeaderBlog() {
           )}
         </Dropdown>
       </Flex>
+
+      {/* Drawer Menu */}
+      <Drawer
+        title='Basic Drawer'
+        placement='left'
+        closable={false}
+        open={isOpenDrawer}
+        onClose={() => setIsOpenDrawer(false)}
+        footer={false}
+        bodyStyle={{ padding: 20, backgroundColor: 'hsl(222.2 84% 4.9%)' }}
+      >
+        <p>Some contents...</p>
+        <p>Some contents...</p>
+        <p>Some contents...</p>
+      </Drawer>
+
+      {/* Modal search */}
+      <Modal
+        destroyOnHidden
+        className='box-search'
+        title='Tìm kiếm'
+        width={770}
+        onCancel={() => {
+          setShowModal(!showModal)
+          setSearch('')
+        }}
+        open={showModal}
+        footer={false}
+      >
+        <p style={{ marginBottom: 12 }}>Tìm kiếm nội dung trên website:</p>
+        <Input
+          id='search'
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          style={{
+            height: 40,
+            backgroundColor: 'transparent',
+            color: '#f8fafc',
+            borderColor: 'rgb(156 163 175 / 1)'
+          }}
+          placeholder='Tiêu đề blog đang tìm...'
+        />
+        <div style={{ marginTop: 20, height: 300, width: '100%', overflowY: 'auto' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', width: '100%' }}>
+            {search === '' ? (
+              <div className='text-center p-8 text-muted-foreground'>Bắt đầu nhập để xem các kết quả tìm kiếm!</div>
+            ) : blogs?.length > 0 ? (
+              blogs.map((blog: Blog) => (
+                <Link
+                  onClick={() => {
+                    setShowModal(!showModal)
+                    setSearch('')
+                  }}
+                  to={`/detail/${blog.slug}`}
+                  key={blog._id}
+                  className='card-search'
+                  style={{ display: 'flex', padding: 16, marginBlock: 16, flexDirection: 'row', gap: 8 }}
+                >
+                  <img
+                    src={blog.thumbnail}
+                    style={{ width: 320, height: 168, objectFit: 'cover', borderRadius: 12, flexShrink: 0 }}
+                  />
+                  <div style={{ marginLeft: 12 }}>
+                    <Title level={4} style={{ fontWeight: 600, color: '#f8fafc' }} ellipsis={{ rows: 2 }}>
+                      {blog.title}
+                    </Title>
+                    <Paragraph style={{ fontWeight: 400, color: '#f8fafc', fontSize: 16 }} ellipsis={{ rows: 2 }}>
+                      {blog.description}
+                    </Paragraph>
+                  </div>
+                </Link>
+              ))
+            ) : (
+              <div className='text-center p-8 text-muted-foreground'>
+                Không tìm thấy Blogs nào khớp với **"{search}"**.
+              </div>
+            )}
+          </div>
+        </div>
+      </Modal>
     </Header>
   )
 }

@@ -60,12 +60,7 @@ const ReusableStatisticCard: React.FC<ReusableStatisticCardProps> = ({
       case 'progress':
         return (
           <div style={{ padding: '16px 0' }}>
-            <Progress
-              percent={progressPercent}
-              status='active'
-              strokeColor={{ from: '#108ee9', to: '#87d068' }}
-              size={8}
-            />
+            <Progress percent={progressPercent} status='active' strokeColor={{ from: '#108ee9', to: '#87d068' }} />
           </div>
         )
       default:

@@ -199,6 +199,7 @@ function CategoryMange() {
       <Modal
         title='Tạo mới Thể loại'
         open={isModalOpen}
+        destroyOnHidden
         footer={null}
         onCancel={() => setIsModalOpen(false)}
         width={600}

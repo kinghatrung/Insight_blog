@@ -1,16 +1,19 @@
 import type { ReactNode } from 'react'
-import { Layout } from 'antd'
+import { Layout, Grid } from 'antd'
 
 import FooterBlog from '~/components/FooterBlog'
 import HeaderBlog from '~/components/HeaderBlog'
 
 const { Content } = Layout
+const { useBreakpoint } = Grid
 
 interface DefaultLayoutProps {
   children?: ReactNode
 }
 
 function DefaultLayout({ children }: DefaultLayoutProps) {
+  const screens = useBreakpoint()
+
   return (
     <Layout
       style={{
@@ -21,7 +24,7 @@ function DefaultLayout({ children }: DefaultLayoutProps) {
       <HeaderBlog />
       <Content
         style={{
-          padding: '112px 24px',
+          padding: screens.lg ? '112px 24px' : '30px 16px',
           backgroundImage: 'url("/images/noise.webp")',
           backgroundSize: '200px 200px',
           backgroundPosition: '0 0'

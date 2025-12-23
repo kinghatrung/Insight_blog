@@ -55,7 +55,6 @@ const shutdown = async () => {
     await closeRedis();
     process.exit(0);
   } catch (error) {
-    console.error("Shutdown error:", error);
     process.exit(1);
   }
 };

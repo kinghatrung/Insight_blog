@@ -35,7 +35,7 @@ const AccessDenied: FC = () => {
           boxShadow: '0 4px 24px rgba(0, 0, 0, 0.08)',
           borderRadius: 12
         }}
-        bordered={false}
+        variant='borderless'
       >
         <Result
           status='403'
@@ -67,12 +67,10 @@ const AccessDenied: FC = () => {
         />
 
         <Card
-          style={{
-            marginTop: 24,
-            backgroundColor: '#fafafa',
-            border: '1px solid #f0f0f0'
+          styles={{
+            header: { marginTop: 24, backgroundColor: '#fafafa', border: '1px solid #f0f0f0' },
+            body: { padding: 16 }
           }}
-          bodyStyle={{ padding: 20 }}
         >
           <Title level={5} style={{ marginTop: 0, marginBottom: 16 }}>
             Nguyên nhân có thể:
