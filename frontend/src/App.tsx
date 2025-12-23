@@ -8,6 +8,7 @@ const DetailBlog = lazy(() => import('~/pages/PublicPage/DetailBlog'))
 const Category = lazy(() => import('~/pages/PublicPage/Category'))
 const About = lazy(() => import('~/pages/PublicPage/About'))
 const DetailCategory = lazy(() => import('~/pages/PublicPage/DetailCategory'))
+const AccessDenied = lazy(() => import('~/pages/PublicPage/AccessDenied'))
 
 const Dashboard = lazy(() => import('~/pages/ProtectedPage/Dashboard'))
 const BlogMange = lazy(() => import('~/pages/ProtectedPage/BlogMange'))
@@ -68,6 +69,7 @@ function App() {
           </Route>
           <Route path='/auth' element={<Auth />} />
           <Route path='/not-found' element={<Auth />} />
+          <Route path='*' element={<AccessDenied />} />
         </Routes>
       </Suspense>
     </BrowserRouter>

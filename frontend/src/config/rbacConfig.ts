@@ -6,7 +6,7 @@ export const roles = {
 export const permissions = {
   // Customer
   VIEW_HOME: 'view_home',
-  VIEW_PROFILE: 'view_profile',
+  VIEW_PROFILE: 'profile',
   // Admin
   VIEW_DASHBOARD: 'view_dashboard'
 }

@@ -59,7 +59,7 @@ function Dashboard() {
   }))
 
   const configData = {
-    data: dataViewsChartYear,
+    data: dataViewsChartYear || [],
     xField: 'month',
     yField: 'value',
     columnStyle: { radius: [4, 4, 0, 0] },
@@ -81,7 +81,7 @@ function Dashboard() {
   }
 
   const viewsChartConfig = {
-    data: dataViewsChart,
+    data: dataViewsChart || [],
     autoFit: true,
     height: 60,
     padding: 8,
@@ -99,7 +99,7 @@ function Dashboard() {
   }
 
   const columnConfig = {
-    data: dataLikeChart,
+    data: dataLikeChart || [],
     autoFit: true,
     height: 60,
     padding: 8,

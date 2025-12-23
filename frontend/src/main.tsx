@@ -9,7 +9,7 @@ import 'dayjs/locale/vi'
 
 import './index.css'
 import App from './App.tsx'
-import { ConfigProvider } from 'antd'
+import { App as AntdApp, ConfigProvider } from 'antd'
 import type { ThemeConfig } from 'antd'
 import { store } from '~/redux/store.ts'
 
@@ -38,12 +38,14 @@ const config: ThemeConfig = {
 
 createRoot(document.getElementById('root')!).render(
   <ConfigProvider theme={config} locale={viVN}>
-    <QueryClientProvider client={queryClient}>
-      <Provider store={store}>
-        <PersistGate persistor={persistor}>
-          <App />
-        </PersistGate>
-      </Provider>
-    </QueryClientProvider>
+    <AntdApp>
+      <QueryClientProvider client={queryClient}>
+        <Provider store={store}>
+          <PersistGate persistor={persistor}>
+            <App />
+          </PersistGate>
+        </Provider>
+      </QueryClientProvider>
+    </AntdApp>
   </ConfigProvider>
 )
