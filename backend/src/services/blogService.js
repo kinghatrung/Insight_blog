@@ -1,11 +1,16 @@
 import mongoose from "mongoose";
+import { getRedis } from "../config/redis.js";
 
 import Blog from "../models/Blog.js";
 import User from "../models/User.js";
 import Like from "../models/Like.js";
 import Save from "../models/Save.js";
+import blogViewService from "../services/blogViewService.js";
 import { slugify } from "../utils/slugify.js";
 import { parseDDMMYYYY } from "../utils/parseDDMMYYYY.js";
+import { getLastNDays } from "../utils/getDay.js";
+
+const TARGET = 1200;
 
 const blogService = {
   getBlogs: async (page = null, pageSize = null, filters = {}) => {
@@ -68,82 +73,123 @@ const blogService = {
   },
   getBlogsStats: async () => {
     try {
+      const redis = getRedis();
       const now = new Date();
+      const year = now.getFullYear();
 
-      // Tính toán ngày bắt đầu tháng hiện tại và tháng trước
-      const startOfCurrentMonth = new Date(now.getFullYear(), now.getMonth(), 1);
-      const startOfLastMonth = new Date(now.getFullYear(), now.getMonth() - 1, 1);
-      const endOfLastMonth = new Date(now.getFullYear(), now.getMonth(), 0, 23, 59, 59, 999);
+      /* ========= TIME RANGE ========= */
+      const startOfToday = new Date(year, now.getMonth(), now.getDate());
+      const endOfToday = new Date(year, now.getMonth(), now.getDate(), 23, 59, 59, 999);
 
-      // Tính toán ngày hôm nay
-      const startOfToday = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-      const endOfToday = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 23, 59, 59, 999);
+      const startOfCurrentMonth = new Date(year, now.getMonth(), 1);
+      const startOfLastMonth = new Date(year, now.getMonth() - 1, 1);
+      const endOfLastMonth = new Date(year, now.getMonth(), 0, 23, 59, 59, 999);
 
-      // 1. Tổng blogs hiện tại
-      const total = await Blog.countDocuments();
+      const startOfYear = new Date(year, 0, 1);
+      const endOfYear = new Date(year, 11, 31, 23, 59, 59, 999);
 
-      // 2. Tổng blogs tháng trước
-      const totalLastMonth = await Blog.countDocuments({
-        createdAt: { $gte: startOfLastMonth, $lte: endOfLastMonth },
-      });
+      const todayKey = now.toLocaleDateString("sv-SE", { timeZone: "Asia/Ho_Chi_Minh" });
+      const last7Days = getLastNDays(7);
 
-      // 3. Tổng blogs tháng này
-      const totalCurrentMonth = await Blog.countDocuments({
-        createdAt: { $gte: startOfCurrentMonth },
-      });
+      /* ========= PARALLEL DB ========= */
+      const [
+        total,
+        totalLastMonth,
+        totalCurrentMonth,
+        todayCount,
+        totalLikes,
+        todayLikes,
+        totalViewsAgg,
+        statusAgg,
+        yearlyViewsAgg,
+        registeredThisMonth,
+      ] = await Promise.all([
+        Blog.countDocuments(),
+        Blog.countDocuments({ createdAt: { $gte: startOfLastMonth, $lte: endOfLastMonth } }),
+        Blog.countDocuments({ createdAt: { $gte: startOfCurrentMonth } }),
+        Blog.countDocuments({ createdAt: { $gte: startOfToday, $lte: endOfToday } }),
 
-      // 4. Blogs đăng hôm nay
-      const todayCount = await Blog.countDocuments({
-        createdAt: { $gte: startOfToday, $lte: endOfToday },
-      });
+        Like.countDocuments(),
+        Like.countDocuments({ createdAt: { $gte: startOfToday, $lte: endOfToday } }),
 
-      // 5. Tính % tăng/giảm so với tháng trước
-      let growthPercent = 0;
-      let isIncrease = true;
+        Blog.aggregate([{ $group: { _id: null, totalViews: { $sum: "$viewCount" } } }]),
+        Blog.aggregate([{ $group: { _id: "$status", count: { $sum: 1 } } }]),
 
-      if (totalLastMonth > 0) {
-        const diff = totalCurrentMonth - totalLastMonth;
-        growthPercent = parseFloat(((diff / totalLastMonth) * 100).toFixed(1));
-        isIncrease = diff >= 0;
-      } else if (totalCurrentMonth > 0) {
-        growthPercent = 100.0;
-        isIncrease = true;
-      }
+        Blog.aggregate([
+          { $match: { createdAt: { $gte: startOfYear, $lte: endOfYear } } },
+          { $group: { _id: { $month: "$createdAt" }, value: { $sum: "$viewCount" } } },
+        ]),
 
-      // 6. Thống kê theo status
-      const statusStats = await Blog.aggregate([
-        {
-          $group: {
-            _id: "$status",
-            count: { $sum: 1 },
-          },
-        },
+        User.countDocuments({ createdAt: { $gte: startOfLastMonth } }),
       ]);
 
-      const stats = {
-        active: 0,
-        processing: 0,
-        error: 0,
-      };
+      /* ========= GROWTH ========= */
+      const diff = totalCurrentMonth - totalLastMonth;
+      const growthPercent =
+        totalLastMonth > 0 ? +((diff / totalLastMonth) * 100).toFixed(1) : totalCurrentMonth > 0 ? 100 : 0;
+      const isIncrease = diff >= 0;
 
-      statusStats.forEach((item) => {
-        if (item._id === "active") stats.active = item.count;
-        if (item._id === "processing") stats.processing = item.count;
-        if (item._id === "error") stats.error = item.count;
+      /* ========= STATUS ========= */
+      const stats = { active: 0, processing: 0, error: 0 };
+      statusAgg.forEach((i) => (stats[i._id] = i.count));
+
+      /* ========= REDIS ========= */
+      const todayViews = Number(await redis.get(`blog:views:total:${todayKey}`)) || 0;
+
+      const viewsChartData = await Promise.all(
+        last7Days.map(async ({ key, formattedDate }) => ({
+          date: formattedDate,
+          value: Number(await redis.get(`blog:views:total:${key}`)) || 0,
+        }))
+      );
+
+      /* ========= YEAR CHART ========= */
+      const yearlyViewsChartData = Array.from({ length: 12 }, (_, i) => {
+        const month = i + 1;
+        return {
+          month: `T${month}`,
+          value: yearlyViewsAgg.find((m) => m._id === month)?.value || 0,
+        };
       });
 
-      const result = {
+      /* ========= LIKES CHART ========= */
+      const likesChartData = await Promise.all(
+        last7Days.map(async ({ formattedDate }) => {
+          const [d, m, y] = formattedDate.split("/").map(Number);
+          const start = new Date(y, m - 1, d);
+          const end = new Date(y, m - 1, d, 23, 59, 59, 999);
+          return {
+            date: formattedDate,
+            value: await Like.countDocuments({ createdAt: { $gte: start, $lte: end } }),
+          };
+        })
+      );
+
+      /* ========= RESPONSE ========= */
+      return {
         total,
         todayCount,
-        growthPercent,
-        isIncrease,
         currentMonth: totalCurrentMonth,
         lastMonth: totalLastMonth,
+        growthPercent,
+        isIncrease,
+
+        totalViews: totalViewsAgg[0]?.totalViews || 0,
+        todayViews,
+        viewsChartData,
+        yearlyViewsChartData,
+
+        totalLikes,
+        todayLikes,
+        likesChartData,
+
+        registeredThisMonth,
+        progressPercent: Math.min(100, Math.round((registeredThisMonth / TARGET) * 100)),
+
         stats,
       };
-      return result;
-    } catch (error) {
-      throw error;
+    } catch (err) {
+      throw err;
     }
   },
   getBlogsActive: async (search) => {
@@ -181,15 +227,23 @@ const blogService = {
         .populate("author", "username displayName avatarUrl")
         .populate("category", "title slug")
         .lean();
+
       if (!blog) return null;
 
-      const [isLiked, likesCount, isSaved] = await Promise.all([
+      const [isLiked, likesCount, isSaved, viewCount] = await Promise.all([
         userId ? Like.exists({ blogId: blog._id, userId }) : false,
         Like.countDocuments({ blogId: blog._id }),
         userId ? Save.exists({ blogId: blog._id, userId }) : false,
+        await blogViewService.getViewCount(blog._id),
       ]);
 
-      return { ...blog, isLiked: !!isLiked, likesCount, isSaved };
+      return {
+        ...blog,
+        isLiked: !!isLiked,
+        likesCount,
+        isSaved,
+        viewCount,
+      };
     } catch (error) {
       throw error;
     }

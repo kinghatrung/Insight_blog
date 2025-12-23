@@ -1,4 +1,3 @@
-import { useEffect } from 'react'
 import { Badge, Row, Col, Flex, Typography, Avatar, Button, Space, message, Image, Skeleton, Spin } from 'antd'
 import dayjs from 'dayjs'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -40,22 +39,6 @@ function DetailBlog() {
     element: 'blog-content',
     enabled: !loadingBlog && !!blogData?.content
   })
-
-  useEffect(() => {
-    let isCancelled = false
-    const trackView = async () => {
-      if (isCancelled) return
-      try {
-        await blogService.trackView(blog?._id)
-      } catch (error) {
-        console.error('Error tracking view:', error)
-      }
-    }
-    if (blog?._id) trackView()
-    return () => {
-      isCancelled = true
-    }
-  }, [blog?._id])
 
   const likeMutation = useMutation({
     mutationFn: (blogId: string) => blogService.likeBlog(blogId),
@@ -126,26 +109,29 @@ function DetailBlog() {
           <Skeleton.Image
             active
             style={{
+              display: 'block',
               width: '100%',
               height: 550,
               maxWidth: 1024,
-              margin: 'auto',
+              margin: '24px auto',
               borderRadius: '12px',
               objectFit: 'cover',
               backgroundColor: '#1f2937'
             }}
           />
         ) : (
-          <img
+          <Image
+            src={blogData?.thumbnail}
             style={{
+              display: 'block',
               width: '100%',
-              maxHeight: 550,
               maxWidth: 1024,
-              margin: 'auto',
-              borderRadius: '12px',
+              maxHeight: 550,
+              margin: '24px auto',
+              borderRadius: 12,
               objectFit: 'cover'
             }}
-            src={blogData?.thumbnail}
+            preview={false}
           />
         )}
         <Flex gap={18} style={{ marginTop: 32 }} vertical justify='center' align='center'>

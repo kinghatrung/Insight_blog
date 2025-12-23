@@ -12,15 +12,6 @@ export const blogService = {
     const res = await authorizedAxiosInstance.get('/blogs/stats')
     return res.data
   },
-  trackView: async (blogId: string) => {
-    const res = await authorizedAxiosInstance.post(`/blog-views/${blogId}/view`)
-    return res.data
-  },
-
-  getViewsStats: async () => {
-    const res = await authorizedAxiosInstance.get('/blog-views/stats')
-    return res.data.stats
-  },
   getBlogsActive: async (search?: string) => {
     const res = await authorizedAxiosInstance.get('/blogs/active', { params: { search } })
     return res.data.blogsActive

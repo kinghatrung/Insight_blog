@@ -1,3 +1,4 @@
+import { memo } from 'react'
 import { Card, Flex, Typography, Divider, Skeleton } from 'antd'
 import { RightOutlined, FireOutlined } from '@ant-design/icons'
 import { Link } from 'react-router-dom'
@@ -154,4 +155,4 @@ function CardCategory({ category, loading }: CardCategoryProps) {
   )
 }
 
-export default CardCategory
+export default memo(CardCategory)

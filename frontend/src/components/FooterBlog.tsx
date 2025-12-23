@@ -1,3 +1,4 @@
+import { memo } from 'react'
 import { Layout, Button } from 'antd'
 import { Link } from 'react-router-dom'
 
@@ -89,4 +90,4 @@ function FooterBlog() {
   )
 }
 
-export default FooterBlog
+export default memo(FooterBlog)

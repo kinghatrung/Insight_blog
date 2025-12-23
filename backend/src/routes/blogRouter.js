@@ -11,6 +11,7 @@ router.get("/active/:id", blogController.getBlogsActiveForAuthor);
 router.get("/:slug", authMiddleware.optionalAuth, blogController.getBlogBySlug);
 router.get("/:id/like", authMiddleware.isAuthorized, blogController.getLikeBlog);
 router.get("/:id/save", authMiddleware.isAuthorized, blogController.getSaveBlog);
+router.get("/chart", blogController.getChartData);
 router.post("/:id/like", authMiddleware.isAuthorized, blogController.likeBlog);
 router.post("/:id/save", authMiddleware.isAuthorized, blogController.saveBlog);
 router.post("/blog", blogController.createBlog);

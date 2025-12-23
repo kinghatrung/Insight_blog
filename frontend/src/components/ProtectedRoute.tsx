@@ -1,5 +1,6 @@
 import { Navigate, Outlet } from 'react-router-dom'
 import { useSelector } from 'react-redux'
+import { memo } from 'react'
 
 import { authSelectors } from '~/redux/slices/authSlice'
 import Loading from '~/components/Loading'
@@ -20,4 +21,4 @@ function ProtectedRoute() {
   return <Outlet />
 }
 
-export default ProtectedRoute
+export default memo(ProtectedRoute)

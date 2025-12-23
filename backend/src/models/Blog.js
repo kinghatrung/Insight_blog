@@ -8,11 +8,7 @@ const blogSchema = new mongoose.Schema(
     content: { type: String, required: true },
     thumbnail: { type: String },
     viewCount: { type: Number, default: 0 },
-    status: {
-      type: String,
-      enum: ["error", "active", "processing"],
-      default: "processing",
-    },
+    status: { type: String, enum: ["error", "active", "processing"], default: "processing" },
     category: { type: mongoose.Schema.Types.ObjectId, ref: "Category", required: true },
     author: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
   },

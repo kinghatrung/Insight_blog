@@ -1,3 +1,5 @@
+import { memo } from 'react'
+
 interface Heading {
   id: string
   text: string
@@ -88,4 +90,4 @@ function ProgressBar({ percent, headings }: ProgressBarProps) {
   )
 }
 
-export default ProgressBar
+export default memo(ProgressBar)

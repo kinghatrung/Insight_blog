@@ -1,4 +1,6 @@
 import blogService from "../services/blogService.js";
+import blogViewService from "../services/blogViewService.js";
+import { getClientIp } from "../utils/ipHelper.js";
 
 const blogController = {
   getBlogs: async (req, res) => {
@@ -18,6 +20,14 @@ const blogController = {
 
       const blogs = await blogService.getBlogs(page, pageSize, filters);
 
+      res.status(200).json(blogs);
+    } catch (error) {
+      res.status(500).json({ message: error.message });
+    }
+  },
+  getChartData: async (req, res) => {
+    try {
+      const blogs = await blogViewService.getChartData();
       res.status(200).json(blogs);
     } catch (error) {
       res.status(500).json({ message: error.message });
@@ -53,8 +63,13 @@ const blogController = {
   getBlogBySlug: async (req, res) => {
     try {
       const slugBlog = req.params.slug;
-      const userId = req.user?.id || null;
+      const userId = req?.user?.id || null;
+      const ipAddress = getClientIp(req);
       const blog = await blogService.getBlogBySlug(slugBlog, userId);
+      await blogViewService
+        .incrementView(blog._id, userId, ipAddress)
+        .catch((err) => console.error("Track view error:", err));
+
       res.status(200).json({ blog });
     } catch (error) {
       res.status(500).json({ message: error.message });

@@ -1,5 +1,6 @@
-import { Card, Avatar, Flex, Typography, Badge, Skeleton } from 'antd'
-import { UserOutlined } from '@ant-design/icons'
+import { memo } from 'react'
+import { Card, Avatar, Flex, Typography, Badge, Skeleton, Space } from 'antd'
+import { UserOutlined, EyeOutlined } from '@ant-design/icons'
 import { Link } from 'react-router-dom'
 import dayjs from 'dayjs'
 
@@ -128,18 +129,23 @@ function CardBlog({ blog, loading, direction = 'vertical' }: CardBlogProps) {
       <Paragraph style={{ fontWeight: 500, opacity: '.75', color: '#f8fafc', marginBlock: 12 }} ellipsis={{ rows: 2 }}>
         {blog?.description}
       </Paragraph>
-      <Flex align='center' gap={12}>
-        <Avatar
-          size={42}
-          icon={<UserOutlined />}
-          src={blog?.author.avatarUrl || 'https://gw.alipayobjects.com/zos/rmsportal/KDpgvguMpGfqaHPjicRK.svg'}
-        />
-        <Paragraph style={{ fontWeight: 500, opacity: '.75', color: '#f8fafc', margin: 0 }}>
-          {dayjs(blog?.createdAt).format('DD/MM/YYYY')}
-        </Paragraph>
+      <Flex align='center' justify='space-between'>
+        <Space align='center' size={12}>
+          <Avatar
+            size={42}
+            icon={<UserOutlined />}
+            src={blog?.author.avatarUrl || 'https://gw.alipayobjects.com/zos/rmsportal/KDpgvguMpGfqaHPjicRK.svg'}
+          />
+          <Paragraph style={{ fontWeight: 500, opacity: '.75', color: '#f8fafc', margin: 0 }}>
+            {dayjs(blog?.createdAt).format('DD/MM/YYYY')}
+          </Paragraph>
+        </Space>
+        <span style={{ color: '#f8fafc', fontSize: 14 }}>
+          <EyeOutlined style={{ marginRight: 8 }} /> {blog?.viewCount}
+        </span>
       </Flex>
     </Card>
   )
 }
 
-export default CardBlog
+export default memo(CardBlog)

@@ -1,3 +1,4 @@
+import { memo } from 'react'
 import { Tooltip, Statistic, Flex, Progress } from 'antd'
 import { StatisticCard } from '@ant-design/pro-components'
 import { InfoCircleOutlined, ArrowUpOutlined, ArrowDownOutlined } from '@ant-design/icons'
@@ -26,7 +27,7 @@ const ReusableStatisticCard: React.FC<ReusableStatisticCardProps> = ({
           <Flex align='center' justify='space-between'>
             <Statistic
               title='Tăng'
-              value={increaseValue || 7.6}
+              value={increaseValue || 0}
               precision={1}
               suffix='%'
               valueStyle={{ color: '#3f8600', fontSize: 20, fontWeight: 600 }}
@@ -35,7 +36,7 @@ const ReusableStatisticCard: React.FC<ReusableStatisticCardProps> = ({
             />
             <Statistic
               title='Giảm'
-              value={decreaseValue || 2.1}
+              value={decreaseValue || 0}
               precision={1}
               suffix='%'
               valueStyle={{ color: '#cf1322', fontSize: 20, fontWeight: 600 }}
@@ -137,4 +138,4 @@ const ReusableStatisticCard: React.FC<ReusableStatisticCardProps> = ({
   )
 }
 
-export default ReusableStatisticCard
+export default memo(ReusableStatisticCard)

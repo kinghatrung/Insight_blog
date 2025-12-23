@@ -27,11 +27,7 @@ function BlogMange() {
   }
 
   const columns: ProColumns<Blog>[] = [
-    {
-      dataIndex: 'index',
-      valueType: 'indexBorder',
-      width: 48
-    },
+    { dataIndex: 'index', valueType: 'indexBorder', width: 48 },
     {
       title: 'Ảnh',
       editable: false,
@@ -39,6 +35,7 @@ function BlogMange() {
       search: false,
       render: (_, record) => (
         <Image
+          style={{ objectFit: 'cover' }}
           src={record.thumbnail}
           alt={record.title}
           width={80}

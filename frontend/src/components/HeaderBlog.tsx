@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, memo } from 'react'
 import { Layout, Button, Typography, Dropdown, Flex, Avatar, Modal, Input } from 'antd'
 import { Link, NavLink } from 'react-router-dom'
 import { SearchOutlined, LogoutOutlined, UserOutlined } from '@ant-design/icons'
@@ -91,7 +91,7 @@ function HeaderBlog() {
         <Dropdown
           className='nav-header'
           placement='bottomRight'
-          dropdownRender={() => (
+          popupRender={() => (
             <div
               style={{
                 backgroundColor: 'hsl(222.2 84% 4.9%)',
@@ -164,6 +164,7 @@ function HeaderBlog() {
           icon={<SearchOutlined />}
         />
         <Modal
+          destroyOnHidden
           className='box-search'
           title='Tìm kiếm'
           width={770}
@@ -227,7 +228,7 @@ function HeaderBlog() {
         </Modal>
         <Dropdown
           placement='bottomRight'
-          dropdownRender={() => (
+          popupRender={() => (
             <div
               style={{
                 backgroundColor: 'hsl(222.2 84% 4.9%)',
@@ -338,4 +339,4 @@ function HeaderBlog() {
   )
 }
 
-export default HeaderBlog
+export default memo(HeaderBlog)

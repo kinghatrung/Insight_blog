@@ -11,68 +11,15 @@ import type { Blog } from '~/types/Blog'
 
 const { Title, Text } = Typography
 
-const salesData = [
-  { month: 'T1', value: 680 },
-  { month: 'T2', value: 490 },
-  { month: 'T3', value: 950 },
-  { month: 'T4', value: 1180 },
-  { month: 'T5', value: 430 },
-  { month: 'T6', value: 1130 },
-  { month: 'T7', value: 1090 },
-  { month: 'T8', value: 1000 },
-  { month: 'T9', value: 1100 },
-  { month: 'T10', value: 760 },
-  { month: 'T11', value: 530 },
-  { month: 'T12', value: 1090 }
-]
-
-const configData = {
-  data: salesData,
-  xField: 'month',
-  yField: 'value',
-  columnStyle: {
-    radius: [4, 4, 0, 0]
-  },
-  marginRatio: 0.5,
-  color: '#1890ff',
-  columnWidthRatio: 0.5,
-  label: false,
-  yAxis: {
-    label: {
-      formatter: (v: string) => `${v}`
-    },
-    grid: {
-      line: {
-        style: {
-          stroke: '#f0f0f0',
-          lineWidth: 1
-        }
-      }
-    }
-  },
-  xAxis: {
-    label: {
-      style: {
-        fill: '#999'
-      }
-    }
-  },
-  tooltip: {
-    formatter: (datum: { month: string; value: number }) => {
-      return { name: 'aa', value: datum.value }
-    }
-  }
+type ViewsChartItem = {
+  date?: string
+  month?: string
+  value: number
 }
 
 const tabItems = [
-  {
-    key: 'sales',
-    label: 'Lượt xem'
-  },
-  {
-    key: 'visits',
-    label: 'Người mới'
-  }
+  { key: 'sales', label: 'Lượt xem' },
+  { key: 'visits', label: 'Người mới' }
 ]
 
 function Dashboard() {
@@ -81,11 +28,6 @@ function Dashboard() {
   const { data: blogsStats } = useQuery({
     queryKey: ['blogsStats'],
     queryFn: () => blogService.getBlogsStats()
-  })
-
-  const { data: viewsStats } = useQuery({
-    queryKey: ['views-stats'],
-    queryFn: () => blogService.getViewsStats()
   })
 
   const { data: blogsActive } = useQuery({
@@ -98,12 +40,48 @@ function Dashboard() {
     .sort((a: Blog, b: Blog) => b.viewCount - a.viewCount)
     .slice(0, 10)
 
-  const data = [
-    264, 417, 438, 887, 309, 397, 550, 575, 563, 430, 525, 592, 492, 467, 513, 546, 983, 340, 539, 243, 226, 192
-  ].map((value, index) => ({ value, index }))
+  const dataLikeChart = blogsStats?.likesChartData?.map((item: ViewsChartItem, index: number) => ({
+    date: item.date,
+    value: item.value,
+    index
+  }))
+
+  const dataViewsChart = blogsStats?.viewsChartData?.map((item: ViewsChartItem, index: number) => ({
+    date: item.date,
+    value: item.value,
+    index
+  }))
+
+  const dataViewsChartYear = blogsStats?.yearlyViewsChartData?.map((item: ViewsChartItem, index: number) => ({
+    index,
+    month: item.month,
+    value: item.value
+  }))
+
+  const configData = {
+    data: dataViewsChartYear,
+    xField: 'month',
+    yField: 'value',
+    columnStyle: { radius: [4, 4, 0, 0] },
+    marginRatio: 0.5,
+    color: '#1890ff',
+    columnWidthRatio: 0.5,
+    label: false,
+    yAxis: {
+      label: { formatter: (v: string) => `${v}` },
+      grid: { line: { style: { stroke: '#f0f0f0', lineWidth: 1 } } }
+    },
+    xAxis: { label: { style: { fill: '#999' } } },
+    tooltip: {
+      items: [{ name: 'Lượt xem', field: 'value' }],
+      title: (datum: { month: string; value: number }) => {
+        return datum.month
+      }
+    }
+  }
 
   const viewsChartConfig = {
-    data: viewsStats?.chartData || [],
+    data: dataViewsChart,
     autoFit: true,
     height: 60,
     padding: 8,
@@ -111,16 +89,8 @@ function Dashboard() {
     xField: 'index',
     yField: 'value',
     tooltip: {
-      title: (d: { date: string; value: number; index: number }) => {
-        const [year, month, day] = d.date.split('-')
-        return `${day}/${month}/${year}`
-      },
-      items: [
-        {
-          name: 'Lượt xem',
-          field: 'value'
-        }
-      ]
+      title: (d: { date: string; value: number; index: number }) => d.date,
+      items: [{ name: 'Lượt xem', field: 'value' }]
     },
     style: {
       fill: 'linear-gradient(-90deg, white 0%, darkgreen 100%)',
@@ -129,7 +99,7 @@ function Dashboard() {
   }
 
   const columnConfig = {
-    data,
+    data: dataLikeChart,
     autoFit: true,
     height: 60,
     padding: 8,
@@ -166,34 +136,38 @@ function Dashboard() {
         <ReusableStatisticCard
           title='Lượt xem'
           subTitle='Tổng số views của tất cả blogs'
-          tooltipText='Tổng số views của tất cả blogs (30 ngày qua)'
-          value={viewsStats?.total}
+          tooltipText='Tổng số views của tất cả blogs (7 ngày qua)'
+          value={blogsStats?.totalViews}
           contentType='area'
           areaConfig={viewsChartConfig}
           footerLabel='Lượt xem hôm nay'
-          footerValue={viewsStats?.todayCount}
-        />
-      </Col>
-
-      <Col xs={24} sm={24} md={12} lg={6}>
-        <ReusableStatisticCard
-          title='Bình luận'
-          subTitle='Tổng số comments'
-          tooltipText='Tổng số comments'
-          value={1102893}
-          contentType='column'
-          columnConfig={columnConfig}
+          footerValue={blogsStats?.todayViews}
         />
       </Col>
 
       <Col xs={24} sm={24} md={12} lg={6}>
         <ReusableStatisticCard
           title='Tương tác'
-          subTitle='Likes và search'
-          tooltipText='Likes và search'
-          value={1102893}
+          subTitle='Likes'
+          tooltipText='Tổng số likes của tất cả blogs (7 ngày qua)'
+          value={blogsStats?.totalLikes}
+          columnConfig={columnConfig}
+          contentType='column'
+          footerLabel='Lượt like hôm nay'
+          footerValue={blogsStats?.todayLikes}
+        />
+      </Col>
+
+      <Col xs={24} sm={24} md={12} lg={6}>
+        <ReusableStatisticCard
+          title='Người dùng'
+          subTitle='Số người dùng mới'
+          tooltipText='Số người dùng mới (7 ngày qua)'
+          value={blogsStats?.registeredThisMonth}
           contentType='progress'
-          progressPercent={50}
+          progressPercent={blogsStats?.progressPercent}
+          footerLabel='Mục tiêu tháng này'
+          footerValue='1.200/mon'
         />
       </Col>
 
@@ -201,12 +175,12 @@ function Dashboard() {
         <Card className='statistic-card' style={{ marginBottom: 0 }}>
           <Tabs activeKey={activeTab} onChange={setActiveTab} items={tabItems} style={{ marginBottom: 0 }} />
 
-          <div style={{ display: 'flex', gap: 24, paddingTop: 24 }}>
-            <div style={{ flex: 1, padding: '0 0 0 32px' }}>
+          <Row gutter={[24, 24]} style={{ paddingTop: 24 }}>
+            <Col xs={24} sm={24} md={24} lg={16}>
               <Column {...configData} />
-            </div>
+            </Col>
 
-            <div style={{ width: 400, borderLeft: '1px solid #f0f0f0', paddingLeft: 24 }}>
+            <Col xs={24} sm={24} md={24} lg={8} style={{ borderLeft: '1px solid #f0f0f0', paddingLeft: 24 }}>
               <Title level={5} style={{ marginBottom: 16 }}>
                 Top Blogs Nổi Bật
               </Title>
@@ -248,8 +222,8 @@ function Dashboard() {
                   </Text>
                 </Link>
               ))}
-            </div>
-          </div>
+            </Col>
+          </Row>
         </Card>
       </Col>
     </Row>

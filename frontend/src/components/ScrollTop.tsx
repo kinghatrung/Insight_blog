@@ -1,4 +1,4 @@
-import { useLayoutEffect } from 'react'
+import { useLayoutEffect, memo } from 'react'
 import { useLocation } from 'react-router-dom'
 
 function ScrollTop() {
@@ -10,4 +10,4 @@ function ScrollTop() {
   return null
 }
 
-export default ScrollTop
+export default memo(ScrollTop)

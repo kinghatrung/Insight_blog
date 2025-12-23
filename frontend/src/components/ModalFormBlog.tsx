@@ -1,4 +1,4 @@
-import { useRef } from 'react'
+import { useRef, memo } from 'react'
 import { useSelector } from 'react-redux'
 import { ProForm, ProFormText, ProFormSelect, ProFormUploadDragger } from '@ant-design/pro-components'
 import { Modal } from 'antd'
@@ -184,4 +184,4 @@ function ModalFormBlog({ isModalOpen, setIsModalOpen, actionRef }: ModalFormBlog
   )
 }
 
-export default ModalFormBlog
+export default memo(ModalFormBlog)

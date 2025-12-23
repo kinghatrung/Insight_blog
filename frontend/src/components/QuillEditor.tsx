@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { memo } from 'react'
 import ReactQuill from 'react-quill'
 import 'react-quill/dist/quill.snow.css'
 
@@ -25,4 +25,4 @@ const QuillEditor: React.FC<QuillEditorProps> = ({ value, onChange }) => {
   )
 }
 
-export default QuillEditor
+export default memo(QuillEditor)
