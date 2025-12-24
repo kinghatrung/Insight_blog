@@ -104,6 +104,7 @@ const blogService = {
         totalViewsAgg,
         statusAgg,
         yearlyViewsAgg,
+        monthlyBlogsAgg,
         registeredThisMonth,
         categoryAgg,
       ] = await Promise.all([
@@ -120,6 +121,16 @@ const blogService = {
         Blog.aggregate([
           { $match: { createdAt: { $gte: startOfYear, $lte: endOfYear } } },
           { $group: { _id: { $month: "$createdAt" }, value: { $sum: "$viewCount" } } },
+        ]),
+
+        Blog.aggregate([
+          { $match: { createdAt: { $gte: startOfCurrentMonth } } },
+          {
+            $group: {
+              _id: { $dayOfMonth: "$createdAt" },
+              count: { $sum: 1 },
+            },
+          },
         ]),
 
         User.countDocuments({ createdAt: { $gte: startOfLastMonth } }),
@@ -159,6 +170,15 @@ const blogService = {
         };
       });
 
+      const daysInMonth = new Date(year, now.getMonth() + 1, 0).getDate();
+      const monthlyBlogsChartData = Array.from({ length: daysInMonth }, (_, i) => {
+        const day = i + 1;
+        return {
+          day: `${day}`,
+          value: monthlyBlogsAgg.find((d) => d._id === day)?.count || 0,
+        };
+      });
+
       /* ========= LIKES CHART ========= */
       const likesChartData = await Promise.all(
         last7Days.map(async ({ formattedDate }) => {
@@ -186,6 +206,7 @@ const blogService = {
         viewsChartData,
         yearlyViewsChartData,
 
+        monthlyBlogsChartData,
         categoriesStats: categoryAgg,
 
         totalLikes,

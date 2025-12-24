@@ -2,8 +2,8 @@ import cron from "node-cron";
 import blogViewService from "../services/blogViewService.js";
 
 export const startViewCountSyncJob = () => {
-  // Chạy mỗi 5 phút: */5 * * * *
-  cron.schedule("*/30 * * * *", async () => {
+  // Chạy mỗi 1 tiếng: 0 * * * *
+  cron.schedule("0 * * * *", async () => {
     try {
       console.log("[CRON] Starting view count sync...");
       const count = await blogViewService.syncAllViewCounts();
@@ -13,5 +13,5 @@ export const startViewCountSyncJob = () => {
     }
   });
 
-  console.log("✅ View count sync job started (every 30 minutes)");
+  console.log("✅ View count sync job started (every 1 hour)");
 };
