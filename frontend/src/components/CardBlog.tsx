@@ -1,5 +1,5 @@
 import { memo } from 'react'
-import { Card, Avatar, Flex, Typography, Badge, Skeleton, Space } from 'antd'
+import { Card, Avatar, Flex, Typography, Badge, Skeleton, Space, Grid } from 'antd'
 import { UserOutlined, EyeOutlined } from '@ant-design/icons'
 import { Link } from 'react-router-dom'
 import dayjs from 'dayjs'
@@ -7,6 +7,7 @@ import dayjs from 'dayjs'
 import type { Blog } from '~/types/Blog'
 
 const { Title, Paragraph } = Typography
+const { useBreakpoint } = Grid
 
 interface CardBlogProps {
   direction?: string
@@ -15,6 +16,11 @@ interface CardBlogProps {
 }
 
 function CardBlog({ blog, loading, direction = 'vertical' }: CardBlogProps) {
+  const screens = useBreakpoint()
+
+  const isHorizontal = direction === 'horizontal'
+  const isColumnLayout = isHorizontal && screens.lg
+
   if (loading)
     return (
       <Card
@@ -24,17 +30,17 @@ function CardBlog({ blog, loading, direction = 'vertical' }: CardBlogProps) {
           border: 'none',
           padding: '16px',
           display: 'flex',
-          gap: direction === 'horizontal' ? 32 : 0,
-          flexDirection: direction === 'horizontal' ? 'row' : 'column',
-          alignItems: direction === 'horizontal' ? 'center' : ''
+          gap: isHorizontal ? 32 : 0,
+          flexDirection: isHorizontal ? (screens.md ? 'row' : 'column') : 'column',
+          alignItems: isHorizontal ? 'center' : ''
         }}
         cover={
           <Skeleton.Image
             style={{
               verticalAlign: 'middle',
-              width: direction === 'horizontal' ? 624 : '100%',
-              aspectRatio: direction === 'horizontal' ? '16 / 9' : '4 / 3',
-              height: direction === 'horizontal' ? 'auto' : 200,
+              width: isColumnLayout ? 624 : '100%',
+              height: isHorizontal && isColumnLayout ? 351 : isHorizontal ? 'auto' : 200,
+              aspectRatio: isHorizontal && !isColumnLayout ? '16 / 9' : !isHorizontal ? '4 / 3' : undefined,
               objectFit: 'cover',
               borderRadius: '16px',
               backgroundColor: '#374151'
@@ -79,25 +85,35 @@ function CardBlog({ blog, loading, direction = 'vertical' }: CardBlogProps) {
         border: 'none',
         padding: '16px',
         display: 'flex',
-        gap: direction === 'horizontal' ? 32 : 0,
-        flexDirection: direction === 'horizontal' ? 'row' : 'column',
-        alignItems: direction === 'horizontal' ? 'center' : ''
+        gap: isHorizontal ? 32 : 0,
+        flexDirection: isHorizontal ? (screens.md ? 'row' : 'column') : 'column',
+        alignItems: isHorizontal ? 'center' : ''
       }}
       cover={
-        <Link to={`/detail/${blog?.slug}`}>
-          <img
-            className='zoom-on-hover'
+        <Link to={`/detail/${blog?.slug}`} style={{ width: '100%' }}>
+          <div
             style={{
-              verticalAlign: 'middle',
-              width: direction === 'horizontal' ? 624 : '100%',
-              aspectRatio: direction === 'horizontal' ? '16 / 9' : '4 / 3',
-              height: direction === 'horizontal' ? 'auto' : 200,
-              objectFit: 'cover',
-              borderRadius: '16px'
+              width: isColumnLayout ? 624 : '100%',
+              flexShrink: 0,
+              flexBasis: isHorizontal && !isColumnLayout ? (screens.lg ? 560 : 420) : 'auto',
+              borderRadius: '16px',
+              height: isHorizontal && isColumnLayout ? 351 : isHorizontal ? 'auto' : 200,
+              aspectRatio: isHorizontal && !isColumnLayout ? '16 / 9' : !isHorizontal ? '4 / 3' : undefined,
+              overflow: 'hidden'
             }}
-            alt='Ảnh blog'
-            src={blog?.thumbnail}
-          />
+          >
+            <img
+              className='zoom-on-hover'
+              style={{
+                width: '100%',
+                height: '100%',
+                verticalAlign: 'middle',
+                objectFit: 'cover'
+              }}
+              alt='Ảnh blog'
+              src={blog?.thumbnail}
+            />
+          </div>
         </Link>
       }
     >

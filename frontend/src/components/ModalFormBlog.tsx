@@ -1,7 +1,7 @@
 import { useRef, memo } from 'react'
 import { useSelector } from 'react-redux'
 import { ProForm, ProFormText, ProFormSelect, ProFormUploadDragger } from '@ant-design/pro-components'
-import { Modal } from 'antd'
+import { Modal, Row, Col } from 'antd'
 import { useQuery } from '@tanstack/react-query'
 import type { ActionType } from '@ant-design/pro-components'
 import type { UploadRequestOption } from 'rc-upload/lib/interface'
@@ -98,8 +98,8 @@ function ModalFormBlog({ isModalOpen, setIsModalOpen, actionRef }: ModalFormBlog
           render: (_, doms) => doms
         }}
       >
-        <div style={{ display: 'flex', gap: '16px' }}>
-          <div style={{ flex: 1 }}>
+        <Row gutter={[16, 0]}>
+          <Col xs={24} sm={24} md={24} lg={8}>
             <ProFormText
               name='title'
               label='Tiêu đề'
@@ -172,9 +172,9 @@ function ModalFormBlog({ isModalOpen, setIsModalOpen, actionRef }: ModalFormBlog
               description='Chọn hoặc kéo thả file vào đây'
               rules={[{ required: true, message: 'Vui lòng chọn ảnh thumbnail' }]}
             />
-          </div>
+          </Col>
 
-          <div style={{ flex: 2 }}>
+          <Col xs={24} sm={24} md={24} lg={16}>
             <ProForm.Item
               name='content'
               label='Nội dung'
@@ -184,8 +184,8 @@ function ModalFormBlog({ isModalOpen, setIsModalOpen, actionRef }: ModalFormBlog
             >
               <QuillEditor />
             </ProForm.Item>
-          </div>
-        </div>
+          </Col>
+        </Row>
       </ProForm>
     </Modal>
   )

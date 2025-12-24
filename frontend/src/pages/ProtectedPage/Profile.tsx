@@ -237,7 +237,7 @@ function Profile() {
               <Modal
                 className='box-search'
                 title={`Sửa thông tin cá nhân - ${currentUser?.displayName}`}
-                width={1000}
+                width={800}
                 open={isModalEditOpen}
                 footer={false}
                 onCancel={() => setIsModalEditOpen(!isModalEditOpen)}
@@ -254,8 +254,8 @@ function Profile() {
                     render: (_, doms) => doms
                   }}
                 >
-                  <Flex gap={18}>
-                    <Flex vertical flex={1}>
+                  <Row gutter={[24, 24]}>
+                    <Col xs={24} sm={24} md={24} lg={12}>
                       <ProFormText
                         name='displayName'
                         className='dark-input'
@@ -285,9 +285,9 @@ function Profile() {
                         }}
                         placeholder='Nhập Mật khẩu người dùng'
                       />
-                    </Flex>
+                    </Col>
 
-                    <div style={{ flex: 1, alignItems: 'center' }}>
+                    <Col xs={24} sm={24} md={24} lg={12}>
                       <ProFormUploadDragger
                         max={1}
                         name='avatarUrl'
@@ -316,8 +316,8 @@ function Profile() {
                           return value
                         }}
                       />
-                    </div>
-                  </Flex>
+                    </Col>
+                  </Row>
                 </ProForm>
               </Modal>
               <Button

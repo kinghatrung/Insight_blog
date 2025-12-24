@@ -11,14 +11,15 @@ function Home() {
     queryFn: () => blogService.getBlogsActive(),
     staleTime: 60 * 1000
   })
-  const blogsData = isLoading ? Array(6).fill(null) : (blogs?.slice(1) ?? [])
+  const safeBlogs = Array.isArray(blogs) ? blogs : []
+  const blogsData = isLoading ? Array(6).fill(null) : (safeBlogs.slice(1) ?? [])
   const firstBlog = blogs?.[0]
 
   return (
-    <Row gutter={[40, 40]}>
-      {/* <Col span={24} style={{ marginBottom: 80 }}>
+    <Row gutter={[32, 32]}>
+      <Col span={24} style={{ marginBottom: 50 }}>
         <CardBlog blog={firstBlog} direction='horizontal' loading={isLoading} />
-      </Col> */}
+      </Col>
 
       {blogsData?.map((blog: Blog, index: number) => (
         <Col key={blog?._id || `skeleton-${index}`} xs={24} sm={12} md={12} lg={8} style={{ display: 'flex' }}>
