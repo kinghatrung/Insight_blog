@@ -222,3 +222,14 @@ h6 {
 .statistic-card .ant-card-body {
   padding: 0px 16px 16px !important;
 }
+
+.ant-pro-page-container-children-container {
+  padding-inline: 40px;
+}
+
+/* Tablet & Mobile */
+@media (max-width: 991px) {
+  .ant-pro-page-container-children-container {
+    padding-inline: 16px;
+  }
+}

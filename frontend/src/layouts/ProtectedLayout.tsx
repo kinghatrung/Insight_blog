@@ -31,6 +31,7 @@ function ProtectedLayout({ children }: DefaultLayoutProps) {
       }}
     >
       <ProLayout
+        style={{ padding: '0px ' }}
         logo={false}
         title='Insight Blog'
         location={{

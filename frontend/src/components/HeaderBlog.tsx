@@ -5,6 +5,8 @@ import { SearchOutlined, LogoutOutlined, UserOutlined, MenuOutlined } from '@ant
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import { useQuery } from '@tanstack/react-query'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faFacebook, faGithub } from '@fortawesome/free-brands-svg-icons'
 
 import { logoutUser, authSelectors } from '~/redux/slices/authSlice'
 import { blogService } from '~/services/blogService'
@@ -61,7 +63,7 @@ function HeaderBlog() {
         backgroundColor: 'rgba(17, 25, 40, 0.3)'
       }}
     >
-      <div style={{ color: '#fff', fontSize: 20, fontWeight: 700 }}>
+      <div style={{ color: '#f8fafc', fontSize: 20, fontWeight: 700 }}>
         <Link to='/' className='nav-link'>
           Insight
         </Link>
@@ -300,19 +302,88 @@ function HeaderBlog() {
         </Dropdown>
       </Flex>
 
-      {/* Drawer Menu */}
+      {/* Drawer Menu For Mobile  */}
       <Drawer
-        title='Basic Drawer'
+        size='default'
+        title={<div style={{ textAlign: 'right', width: '100%', color: '#f8fafc' }}>Insight Blog</div>}
+        closeIcon={<span style={{ color: '#f8fafc', fontSize: '16px' }}>✕</span>}
         placement='left'
-        closable={false}
         open={isOpenDrawer}
         onClose={() => setIsOpenDrawer(false)}
-        footer={false}
-        bodyStyle={{ padding: 20, backgroundColor: 'hsl(222.2 84% 4.9%)' }}
+        footer={
+          <Flex align='center' gap={8} wrap='wrap'>
+            <Paragraph
+              style={{
+                fontWeight: 700,
+                color: '#f8fafc',
+                fontSize: 'clamp(14px, 1.5vw, 16px)',
+                margin: 0
+              }}
+            >
+              Liên hệ
+            </Paragraph>
+            <Button
+              type='primary'
+              style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', textAlign: 'center' }}
+              shape='circle'
+            >
+              <Link to={'https://www.facebook.com/huyen2706'}>
+                <FontAwesomeIcon icon={faFacebook} size='lg' />
+              </Link>
+            </Button>
+            <Button
+              type='primary'
+              shape='circle'
+              style={{
+                backgroundColor: '#24292f',
+                borderColor: '#24292f',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center'
+              }}
+            >
+              <Link to={'https://github.com/'}>
+                <FontAwesomeIcon icon={faGithub} size='lg' />
+              </Link>
+            </Button>
+          </Flex>
+        }
+        styles={{
+          header: {
+            padding: 20,
+            color: '#f8fafc',
+            backgroundColor: 'hsl(222.2 84% 4.9%)',
+            borderBottom: '1px solid #f8fafc'
+          },
+          body: { display: 'flex', flexDirection: 'column', padding: 20, backgroundColor: 'hsl(222.2 84% 4.9%)' },
+          footer: { padding: 20, color: '#f8fafc', backgroundColor: 'hsl(222.2 84% 4.9%)' }
+        }}
       >
-        <p>Some contents...</p>
-        <p>Some contents...</p>
-        <p>Some contents...</p>
+        <Link to='/' onClick={() => setIsOpenDrawer(false)} style={{ padding: '20px 10px' }} className='nav-header'>
+          <Title style={{ fontSize: '18px', color: '#f8fafc', fontWeight: 600, margin: 0 }} color='white'>
+            Trang chủ
+          </Title>
+        </Link>
+        <Link
+          to='/category'
+          onClick={() => setIsOpenDrawer(false)}
+          style={{ padding: '20px 10px' }}
+          className='nav-header'
+        >
+          <Title style={{ fontSize: '18px', color: '#f8fafc', fontWeight: 600, margin: 0 }} color='white'>
+            Chủ đề bài viết
+          </Title>
+        </Link>
+        <Link
+          to='/aboutme'
+          onClick={() => setIsOpenDrawer(false)}
+          style={{ padding: '20px 10px' }}
+          className='nav-header'
+        >
+          <Title style={{ fontSize: '18px', color: '#f8fafc', fontWeight: 600, margin: 0 }} color='white'>
+            Về chúng tôi
+          </Title>
+        </Link>
       </Drawer>
 
       {/* Modal search */}
