@@ -136,6 +136,10 @@ function Dashboard() {
     angleField: 'value',
     colorField: 'type',
     radius: 0.8,
+    tooltip: {
+      items: [{ name: 'Số lượng blogs', field: 'value' }],
+      showCrosshairs: true
+    },
     label: {
       text: (d: { type: string; value: number; index: number }) => `${d.type}\n ${d.value}`,
       position: 'spider'
@@ -153,6 +157,10 @@ function Dashboard() {
       tooltip: {
         marker: false
       }
+    },
+    tooltip: {
+      items: [{ name: 'Số blogs được tạo', field: 'value' }],
+      showCrosshairs: true
     },
     style: {
       fill: 'linear-gradient(-90deg, white 0%, darkgreen 100%)'
