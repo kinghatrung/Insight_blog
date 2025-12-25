@@ -132,7 +132,7 @@ function BlogMange() {
     {
       title: 'Hành động',
       valueType: 'option',
-      render: (text, record, _, action) => [
+      render: (__, record, _, action) => [
         <a key='edit' onClick={() => action?.startEditable?.(record._id)}>
           Sửa
         </a>,

@@ -53,7 +53,7 @@ function ProtectedLayout({ children }: DefaultLayoutProps) {
           src: currentUser?.avatarUrl,
           size: 30,
           title: currentUser?.displayName,
-          render: (props, dom) => {
+          render: (_, dom) => {
             return (
               <Dropdown
                 placement='top'
