@@ -34,15 +34,18 @@ function Profile() {
   const { currentUser } = useSelector(authSelectors)
   const { data: blogsAuthor, isLoading: loadingAuthor } = useQuery({
     queryKey: ['blogs'],
-    queryFn: () => blogService.getBlogsActiveForAuthor(currentUser?._id)
+    queryFn: () => blogService.getBlogsActiveForAuthor(currentUser?._id),
+    staleTime: 5 * 60 * 1000
   })
   const { data: blogsLiked, isLoading: loadingLiked } = useQuery({
     queryKey: ['blogsLiked'],
-    queryFn: () => blogService.getBlogsLiked(currentUser?._id)
+    queryFn: () => blogService.getBlogsLiked(currentUser?._id),
+    staleTime: 5 * 60 * 1000
   })
   const { data: blogsSaved, isLoading: loadingSaved } = useQuery({
     queryKey: ['blogsSaved'],
-    queryFn: () => blogService.getBlogsSave(currentUser?._id)
+    queryFn: () => blogService.getBlogsSave(currentUser?._id),
+    staleTime: 5 * 60 * 1000
   })
 
   const blogs = loadingAuthor ? Array(6).fill(null) : blogsAuthor?.blogs

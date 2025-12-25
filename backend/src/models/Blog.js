@@ -57,6 +57,10 @@ const blogSchema = new mongoose.Schema(
 );
 
 // Index cho tìm kiếm
+blogSchema.index({ slug: 1 }, { unique: true });
+blogSchema.index({ status: 1, createdAt: -1 });
+blogSchema.index({ category: 1, status: 1 });
+blogSchema.index({ author: 1 });
 blogSchema.index({ title: "text", description: "text" });
 
 const Blog = mongoose.model("Blog", blogSchema);

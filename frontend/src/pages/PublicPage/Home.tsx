@@ -1,3 +1,4 @@
+import { useMemo } from 'react'
 import { Col, Row } from 'antd'
 import { useQuery } from '@tanstack/react-query'
 
@@ -9,10 +10,14 @@ function Home() {
   const { data: blogs, isLoading } = useQuery({
     queryKey: ['blogs'],
     queryFn: () => blogService.getBlogsActive(),
-    staleTime: 60 * 1000
+    staleTime: 5 * 60 * 1000, // 5 phút
+    refetchOnWindowFocus: false
   })
   const safeBlogs = Array.isArray(blogs) ? blogs : []
-  const blogsData = isLoading ? Array(6).fill(null) : (safeBlogs.slice(1) ?? [])
+  const blogsData = useMemo(() => {
+    if (isLoading) return Array(6).fill(null)
+    return safeBlogs.slice(1) ?? []
+  }, [isLoading, safeBlogs])
   const firstBlog = blogs?.[0]
 
   return (

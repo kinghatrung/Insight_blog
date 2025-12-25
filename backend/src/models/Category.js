@@ -42,7 +42,7 @@ categorySchema.virtual("blogs", {
 
 // Add index for better query performance
 categorySchema.index({ status: 1 });
-// categorySchema.index({ slug: 1 });
+categorySchema.index({ slug: 1 }, { unique: true });
 
 const Category = mongoose.model("Category", categorySchema);
 export default Category;

@@ -103,6 +103,7 @@ function CardBlog({ blog, loading, direction = 'vertical' }: CardBlogProps) {
             }}
           >
             <img
+              loading='lazy'
               className='zoom-on-hover'
               style={{
                 width: '100%',
@@ -112,6 +113,8 @@ function CardBlog({ blog, loading, direction = 'vertical' }: CardBlogProps) {
               }}
               alt='Ảnh blog'
               src={blog?.thumbnail}
+              srcSet={`${blog?.thumbnail}?w=400 400w, ${blog?.thumbnail}?w=800 800w, ${blog?.thumbnail}?w=1200 1200w`}
+              sizes='(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw'
             />
           </div>
         </Link>

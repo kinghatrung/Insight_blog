@@ -1,3 +1,4 @@
+import { useCallback, useMemo } from 'react'
 import { Badge, Row, Col, Flex, Typography, Avatar, Button, Space, message, Image, Skeleton, Spin } from 'antd'
 import dayjs from 'dayjs'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -26,6 +27,7 @@ function DetailBlog() {
   const { data: blog, isLoading: loadingBlog } = useQuery({
     queryKey: ['blog', slug, currentUser?._id],
     queryFn: () => blogService.getBlogBySlug(slug!),
+    staleTime: 2 * 60 * 1000, // 2 phút
     enabled: !!slug
   })
   const { data: blogsData, isLoading } = useQuery({
@@ -33,7 +35,10 @@ function DetailBlog() {
     queryFn: () => blogService.getBlogsActive()
   })
   const blogData = blog?.blog
-  const newBlogs = isLoading ? Array(3).fill(null) : blogsData?.filter((blog: Blog) => blog.slug !== slug).slice(0, 3)
+  const newBlogs = useMemo(() => {
+    if (isLoading) return Array(3).fill(null)
+    return blogsData?.filter((blog: Blog) => blog.slug !== slug).slice(0, 3)
+  }, [isLoading, blogsData, slug])
 
   const { headings, progress } = useReadingProgressAndHeadingData({
     element: 'blog-content',
@@ -76,31 +81,35 @@ function DetailBlog() {
     }
   })
 
-  const handleToggleLike = () => {
+  const blogId = blogData?._id
+  const isSaved = blogData?.isSaved
+  const isLiked = blogData?.isLiked
+
+  const handleToggleLike = useCallback(() => {
     if (!currentUser) {
       message.warning('Vui lòng đăng nhập để thích bài viết')
       return
     }
 
-    if (blogData?.isLiked) {
-      unlikeMutation.mutate(blogData._id)
+    if (isLiked) {
+      unlikeMutation.mutate(blogId!)
     } else {
-      likeMutation.mutate(blogData._id)
+      likeMutation.mutate(blogId!)
     }
-  }
+  }, [currentUser, isLiked, blogId, unlikeMutation, likeMutation])
 
-  const handleToggleSave = () => {
+  const handleToggleSave = useCallback(() => {
     if (!currentUser) {
       message.warning('Vui lòng đăng nhập để lưu bài viết')
       return
     }
 
-    if (blogData?.isSaved) {
-      unsaveMutation.mutate(blogData._id)
+    if (isSaved) {
+      unsaveMutation.mutate(blogId!)
     } else {
-      saveMutation.mutate(blogData._id)
+      saveMutation.mutate(blogId!)
     }
-  }
+  }, [currentUser, isSaved, blogId, unsaveMutation, saveMutation])
 
   return (
     <section style={{ padding: '0 16px' }}>
@@ -120,8 +129,9 @@ function DetailBlog() {
             }}
           />
         ) : (
-          <Image
-            src={blogData?.thumbnail}
+          <img
+            loading='lazy'
+            alt='Ảnh blog'
             style={{
               display: 'block',
               width: '100%',
@@ -132,7 +142,9 @@ function DetailBlog() {
               borderRadius: 12,
               objectFit: 'cover'
             }}
-            preview={false}
+            src={blogData?.thumbnail}
+            srcSet={`${blogData?.thumbnail}?w=400 400w, ${blogData?.thumbnail}?w=800 800w, ${blogData?.thumbnail}?w=1200 1200w`}
+            sizes='(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw'
           />
         )}
         <Flex gap={18} style={{ marginTop: 32 }} vertical justify='center' align='center'>
