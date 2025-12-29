@@ -1,4 +1,5 @@
 import { createRoot } from 'react-dom/client'
+import { SpeedInsights } from '@vercel/speed-insights/react'
 import { Provider } from 'react-redux'
 import { PersistGate } from 'redux-persist/integration/react'
 import { persistStore } from 'redux-persist'
@@ -43,6 +44,7 @@ createRoot(document.getElementById('root')!).render(
         <Provider store={store}>
           <PersistGate persistor={persistor}>
             <App />
+            <SpeedInsights />
           </PersistGate>
         </Provider>
       </QueryClientProvider>
