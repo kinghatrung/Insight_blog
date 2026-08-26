@@ -1,3 +1,5 @@
+ <img src="blog.png" alt="Halo Chat Platform Hero Banner" width="100%" />
+
 # Insight - Nền tảng Blog & Dashboard Thống Kê
 
 Insight là một nền tảng blog cá nhân/kỹ thuật hiện đại với khu vực đọc bài công khai và khu vực quản trị mạnh mẽ. Dự án được xây dựng với React + TypeScript ở frontend và Node.js + Express ở backend, tích hợp MongoDB, Redis và Cloudinary.
